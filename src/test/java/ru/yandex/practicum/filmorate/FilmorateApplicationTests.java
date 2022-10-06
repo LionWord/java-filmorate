@@ -28,7 +28,7 @@ class FilmorateApplicationTests {
 		assertFalse(UserController.isInvalidUserInput(user));
 	}
 	@Test
-	void shouldReturnTrueIfEmailDontContainsAtSigh() {
+	void shouldReturnTrueIfEmailDontContainsAtSign() {
 		User user = User.builder()
 				.id(2)
 				.birthday(LocalDate.of(1984, 12, 21))
