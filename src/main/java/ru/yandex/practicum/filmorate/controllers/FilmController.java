@@ -48,7 +48,7 @@ public class FilmController {
             return film;
     }
 
-    public boolean isInvalidFilmInput(Film film) {
+    public static boolean isInvalidFilmInput(Film film) {
         return film.getName().isEmpty()
                 || film.getDescription().length() > 200
                 || film.getDuration().isNegative()

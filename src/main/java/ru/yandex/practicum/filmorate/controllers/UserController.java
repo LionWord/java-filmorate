@@ -48,11 +48,11 @@ public class UserController {
         return user;
     }
 
-    public boolean isInvalidUserInput(User user) {
+    public static boolean isInvalidUserInput(User user) {
         return user.getEmail().isEmpty()
                 || !user.getEmail().contains("@")
                 || user.getBirthday().isAfter(LocalDate.now())
-                || !user.getLogin().contains(" ")
+                || user.getLogin().contains(" ")
                 || user.getLogin().isEmpty();
     }
 }
