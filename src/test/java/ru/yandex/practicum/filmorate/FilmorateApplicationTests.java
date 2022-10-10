@@ -2,10 +2,9 @@ package ru.yandex.practicum.filmorate;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
-import ru.yandex.practicum.filmorate.controllers.FilmController;
-import ru.yandex.practicum.filmorate.controllers.UserController;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.services.Validator;
 
 import java.time.LocalDate;
 
@@ -16,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class FilmorateApplicationTests {
 
     @Test
-    void shouldReturnFalseIfUserIsValid() {
+    void shouldReturnTrueIfUserIsValid() {
         User user = User.builder()
                 .id(1)
                 .birthday(LocalDate.of(1984, 12, 21))
@@ -24,11 +23,11 @@ class FilmorateApplicationTests {
                 .name("Ivan")
                 .login("Zeliboba")
                 .build();
-        assertFalse(UserController.isInvalidUserInput(user));
+        assertTrue(Validator.isValidUser(user));
     }
 
     @Test
-    void shouldReturnTrueIfEmailDontContainsAtSign() {
+    void shouldReturnFalseIfEmailDontContainsAtSign() {
         User user = User.builder()
                 .id(2)
                 .birthday(LocalDate.of(1984, 12, 21))
@@ -36,11 +35,11 @@ class FilmorateApplicationTests {
                 .name("Andrew")
                 .login("I_HATE_VALID_EMAILS")
                 .build();
-        assertTrue(UserController.isInvalidUserInput(user));
+        assertFalse(Validator.isValidUser(user));
     }
 
     @Test
-    void shouldReturnTrueIfEmailIsEmpty() {
+    void shouldReturnFalseIfEmailIsEmpty() {
         User user = User.builder()
                 .id(4)
                 .birthday(LocalDate.of(1999, 4, 3))
@@ -48,11 +47,11 @@ class FilmorateApplicationTests {
                 .name("Eugen Blank")
                 .login("E.Blank")
                 .build();
-        UserController.isInvalidUserInput(user);
+        assertFalse(Validator.isValidUser(user));
     }
 
     @Test
-    void shouldReturnTrueIfLoginIsEmpty() {
+    void shouldReturnFalseIfLoginIsEmpty() {
         User user = User.builder()
                 .id(6)
                 .birthday(LocalDate.of(1991, 1, 1))
@@ -60,11 +59,11 @@ class FilmorateApplicationTests {
                 .name("Olologin")
                 .login("")
                 .build();
-        assertTrue(UserController.isInvalidUserInput(user));
+        assertFalse(Validator.isValidUser(user));
     }
 
     @Test
-    void shouldReturnTrueIfLoginContainsSpaces() {
+    void shouldReturnFalseIfLoginContainsSpaces() {
         User user = User.builder()
                 .id(5)
                 .birthday(LocalDate.of(1947, 1, 8))
@@ -72,11 +71,11 @@ class FilmorateApplicationTests {
                 .name("David Bowie")
                 .login("Ground control to major Tom")
                 .build();
-        assertTrue(UserController.isInvalidUserInput(user));
+        assertFalse(Validator.isValidUser(user));
     }
 
     @Test
-    void shouldReturnTrueIfUserIsFromTheFuture() {
+    void shouldReturnFalseIfUserIsFromTheFuture() {
         User user = User.builder()
                 .id(3)
                 .birthday(LocalDate.of(2029, 7, 11))
@@ -84,11 +83,11 @@ class FilmorateApplicationTests {
                 .name("T800")
                 .login("IllBeBack")
                 .build();
-        assertTrue(UserController.isInvalidUserInput(user));
+        assertFalse(Validator.isValidUser(user));
     }
 
     @Test
-    void shouldReturnFalseIfFilmIsValid() {
+    void shouldReturnTrueIfFilmIsValid() {
         Film film = Film.builder()
                 .id(1)
                 .name("Godfather")
@@ -96,11 +95,11 @@ class FilmorateApplicationTests {
                 .releaseDate(LocalDate.of(1972, 3, 14))
                 .duration(175)
                 .build();
-        assertFalse(FilmController.isInvalidFilmInput(film));
+        assertTrue(Validator.isValidFilm(film));
     }
 
     @Test
-    void shouldReturnTrueIfFilmIsTooOld() {
+    void shouldReturnFalseIfFilmIsTooOld() {
         Film film = Film.builder()
                 .id(2)
                 .name("Stoneage")
@@ -108,11 +107,11 @@ class FilmorateApplicationTests {
                 .releaseDate(LocalDate.of(1895, 12, 27))
                 .duration(60)
                 .build();
-        assertTrue(FilmController.isInvalidFilmInput(film));
+        assertFalse(Validator.isValidFilm(film));
     }
 
     @Test
-    void shouldReturnTrueIfDescriptionLengthIsMoreThan200() {
+    void shouldReturnFalseIfDescriptionLengthIsMoreThan200() {
         Film film = Film.builder()
                 .id(3)
                 .name("Mr Trololo")
@@ -132,11 +131,11 @@ class FilmorateApplicationTests {
                 .releaseDate(LocalDate.of(1966, 1, 1))
                 .duration(3)
                 .build();
-        assertTrue(FilmController.isInvalidFilmInput(film));
+        assertFalse(Validator.isValidFilm(film));
     }
 
     @Test
-    void shouldReturnTrueIfFilmDoesNotContainName() {
+    void shouldReturnFalseIfFilmDoesNotContainName() {
         Film film = Film.builder()
                 .id(4)
                 .name("")
@@ -144,11 +143,11 @@ class FilmorateApplicationTests {
                 .releaseDate(LocalDate.of(1999, 12, 27))
                 .duration(60)
                 .build();
-        assertTrue(FilmController.isInvalidFilmInput(film));
+        assertFalse(Validator.isValidFilm(film));
     }
 
     @Test
-    void shouldReturnTrueIfFilmDurationIsNegative() {
+    void shouldReturnFalseIfFilmDurationIsNegative() {
         Film film = Film.builder()
                 .id(5)
                 .name("Pessimist")
@@ -156,11 +155,11 @@ class FilmorateApplicationTests {
                 .releaseDate(LocalDate.of(1999, 12, 27))
                 .duration(-1)
                 .build();
-        assertTrue(FilmController.isInvalidFilmInput(film));
-    }
+        assertFalse(Validator.isValidFilm(film));
+  }
 
     @Test
-    void shouldReturnTrueIfFilmDurationIsZero() {
+    void shouldReturnFalseIfFilmDurationIsZero() {
         Film film = Film.builder()
                 .id(6)
                 .name("Smashing Pumpkins")
@@ -168,6 +167,6 @@ class FilmorateApplicationTests {
                 .releaseDate(LocalDate.of(1996, 4, 23))
                 .duration(0)
                 .build();
-        assertTrue(FilmController.isInvalidFilmInput(film));
+        assertFalse(Validator.isValidFilm(film));
     }
 }

@@ -5,9 +5,9 @@ import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exceptions.AlreadyExistsException;
 import ru.yandex.practicum.filmorate.exceptions.InvalidInputException;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.utils.IdAssigner;
+import ru.yandex.practicum.filmorate.services.IdAssigner;
+import ru.yandex.practicum.filmorate.services.Validator;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -20,15 +20,6 @@ public class UserController {
 
     private final HashMap<Integer, User> database = new HashMap<>();
 
-    public static boolean isInvalidUserInput(User user) {
-        return user.getEmail().isEmpty()
-                || !user.getEmail().contains("@")
-                || user.getBirthday().isAfter(LocalDate.now())
-                || user.getLogin().contains(" ")
-                || user.getLogin().isEmpty()
-                || user.getLogin() == null;
-    }
-
     @GetMapping
     public List<User> getAllUsers() {
         return new ArrayList<>(database.values());
@@ -36,7 +27,7 @@ public class UserController {
 
     @PostMapping
     public User addUser(@RequestBody User user) throws InvalidInputException, AlreadyExistsException {
-        if (isInvalidUserInput(user)) {
+        if (!Validator.isValidUser(user)) {
             throw new InvalidInputException("Invalid input.");
         }
 
@@ -58,7 +49,7 @@ public class UserController {
 
     @PutMapping
     public User updateUser(@RequestBody User user) throws InvalidInputException {
-        if (isInvalidUserInput(user)) {
+        if (!Validator.isValidUser(user)) {
             throw new InvalidInputException("Invalid input.");
         }
         if (!database.containsKey(user.getId())) {
