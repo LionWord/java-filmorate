@@ -5,13 +5,13 @@ import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exceptions.AlreadyExistsException;
 import ru.yandex.practicum.filmorate.exceptions.InvalidInputException;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.services.IdAssigner;
-import ru.yandex.practicum.filmorate.services.Validator;
+import ru.yandex.practicum.filmorate.utils.IdAssigner;
+import ru.yandex.practicum.filmorate.utils.Validator;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-//test
+
 @RestController
 @Slf4j
 @RequestMapping("/films")

@@ -5,13 +5,10 @@ import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exceptions.AlreadyExistsException;
 import ru.yandex.practicum.filmorate.exceptions.InvalidInputException;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.services.IdAssigner;
-import ru.yandex.practicum.filmorate.services.Validator;
+import ru.yandex.practicum.filmorate.utils.IdAssigner;
+import ru.yandex.practicum.filmorate.utils.Validator;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @RestController
 @Slf4j
@@ -59,4 +56,17 @@ public class UserController {
         log.info("User entry" + user.getName() + " succesfully updated.");
         return user;
     }
+
+    @PutMapping("{id}/friends/{friendId}")
+    public Map<String, String> befriendUser(@PathVariable(value = "id") int userID,
+                                            @PathVariable(value = "friendId") int friendID) {
+        return
+    }
+
+    @DeleteMapping("{id}/friends/{friendId}")
+    public Map<String, String> unfriendUser(@PathVariable(value = "id") int userID,
+                                            @PathVariable(value = "friendId") int friendID) {
+        return
+    }
+
 }
