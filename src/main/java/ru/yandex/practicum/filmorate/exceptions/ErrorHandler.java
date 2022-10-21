@@ -9,11 +9,15 @@ import ru.yandex.practicum.filmorate.utils.Messages;
 @RestControllerAdvice
 public class ErrorHandler {
 
-    @ExceptionHandler({NoSuchEntryException.class,
-            InvalidInputException.class,
-            FailedValidationException.class})
+    @ExceptionHandler({InvalidInputException.class, FailedValidationException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ExceptionMessage handleRequestExceptions(RuntimeException e) {
+        return new ExceptionMessage(Messages.REQUEST_ERROR, e.getMessage());
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ExceptionMessage handleNoSuchEntryException(NoSuchEntryException e) {
         return new ExceptionMessage(Messages.REQUEST_ERROR, e.getMessage());
     }
 
