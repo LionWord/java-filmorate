@@ -45,4 +45,8 @@ public class User {
     public void removeFriend(int friendID) {
         friendsID.remove(friendID);
     }
+
+    public boolean gotFriend(int friendID) {
+        return friendsID.contains(friendID);
+    }
 }

@@ -61,4 +61,12 @@ public class InMemoryUserStorage implements UserStorage {
         return database;
     }
 
+    public boolean userIsPresent(int userID) {
+        return database.containsKey(userID);
+    }
+
+    public User getUser(int userID) {
+        return database.get(userID);
+    }
+
 }
