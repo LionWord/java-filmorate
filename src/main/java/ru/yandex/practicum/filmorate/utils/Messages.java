@@ -19,12 +19,14 @@ public class Messages {
 
     public static final String NO_SUCH_USER = "User with this ID does not exist";
     public static final String NO_SUCH_FILM = "Film with this ID does not exist";
-    public static final String INPUT_ERROR = "Input Error";
-    public static final String SERVER_ERROR = "Server Error";
-    public static final String REQUEST_ERROR = "Request Error";
+    public static final String INPUT_ERROR = "Input error";
+    public static final String SERVER_ERROR = "Server error";
+    public static final String REQUEST_ERROR = "Request error";
+    public static final String UNKNOWN_ERROR = "Unknown error";
     public static final String USER_ALREADY_EXISTS = "User already exists";
     public static final String FILM_ALREADY_EXISTS = "Film already exists";
-
+    public static final String ALREADY_FRIENDS = "Users are already friends";
+    public static final String NOT_FRIENDS = "Users are not friends";
 
     private Messages() {}
 

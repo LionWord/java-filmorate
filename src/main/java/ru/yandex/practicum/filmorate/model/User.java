@@ -7,7 +7,6 @@ import java.util.Set;
 
 
 @Getter
-@Setter
 @ToString
 @Builder
 public class User {
@@ -17,8 +16,33 @@ public class User {
     private String login;
     private String name;
     private LocalDate birthday;
-    private Set<User> friends;
+    private Set<Integer> friendsID;
 
+    public void setId(int id) {
+        this.id = id;
+    }
 
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
+    public void setLogin(String login) {
+        this.login = login;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setBirthday(LocalDate birthday) {
+        this.birthday = birthday;
+    }
+
+    public void addFriend(int friendID) {
+        friendsID.add(friendID);
+    }
+
+    public void removeFriend(int friendID) {
+        friendsID.remove(friendID);
+    }
 }

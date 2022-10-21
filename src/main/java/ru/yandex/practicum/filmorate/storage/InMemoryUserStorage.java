@@ -10,7 +10,6 @@ import ru.yandex.practicum.filmorate.utils.Messages;
 import ru.yandex.practicum.filmorate.utils.Validator;
 
 import java.util.*;
-import java.util.stream.Stream;
 
 @Component
 public class InMemoryUserStorage implements UserStorage {

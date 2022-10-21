@@ -21,10 +21,16 @@ public class ErrorHandler {
         return new ExceptionMessage(Messages.REQUEST_ERROR, e.getMessage());
     }
 
-    @ExceptionHandler
+    @ExceptionHandler ({AlreadyExistsException.class, FriendsAlreadyException.class})
     @ResponseStatus(HttpStatus.CONFLICT)
-    public ExceptionMessage handleAlreadyExistsException(AlreadyExistsException e) {
+    public ExceptionMessage handleConflictException(RuntimeException e) {
         return new ExceptionMessage(Messages.REQUEST_ERROR, e.getMessage());
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ExceptionMessage handleUnknownException(RuntimeException e) {
+        return new ExceptionMessage(Messages.SERVER_ERROR, Messages.UNKNOWN_ERROR);
     }
 
 }
