@@ -9,7 +9,7 @@ import ru.yandex.practicum.filmorate.utils.Messages;
 @RestControllerAdvice
 public class ErrorHandler {
 
-    @ExceptionHandler({NoSuchUserException.class,
+    @ExceptionHandler({NoSuchEntryException.class,
             InvalidInputException.class,
             FailedValidationException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)

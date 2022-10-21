@@ -2,7 +2,7 @@ package ru.yandex.practicum.filmorate.storage;
 
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exceptions.FailedValidationException;
-import ru.yandex.practicum.filmorate.exceptions.NoSuchUserException;
+import ru.yandex.practicum.filmorate.exceptions.NoSuchEntryException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.utils.Messages;
 import ru.yandex.practicum.filmorate.utils.Validator;
@@ -29,7 +29,7 @@ public class InMemoryUserStorage implements UserStorage {
         if (database.containsKey(userID)) {
             database.remove(userID);
         } else {
-            throw new NoSuchUserException(Messages.NO_SUCH_USER);
+            throw new NoSuchEntryException(Messages.NO_SUCH_USER);
         }
     }
 
@@ -38,7 +38,7 @@ public class InMemoryUserStorage implements UserStorage {
         if (!Validator.isValidUser(user)) {
             throw new FailedValidationException(Messages.FAILED_USER_VALIDATION);
         } else if (!database.containsKey(user.getId())) {
-            throw new NoSuchUserException(Messages.NO_SUCH_USER);
+            throw new NoSuchEntryException(Messages.NO_SUCH_USER);
         }
         database.replace(user.getId(), user);
     }

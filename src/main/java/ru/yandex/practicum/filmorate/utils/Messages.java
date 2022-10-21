@@ -17,11 +17,12 @@ public class Messages {
             + "3) Duration is less than or equal 0\n"
             + "4) Release date is before 28.12.1895\n";
 
-    public static final String NO_SUCH_USER = "No such user with this ID.";
-
+    public static final String NO_SUCH_USER = "User with this ID does not exist.";
+    public static final String NO_SUCH_FILM = "Film with this ID does not exist.";
     public static final String INPUT_ERROR = "Input Error";
     public static final String SERVER_ERROR = "Server Error";
     public static final String REQUEST_ERROR = "Request Error";
+
 
     private Messages() {}
 
