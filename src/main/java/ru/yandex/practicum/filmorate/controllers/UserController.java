@@ -15,8 +15,6 @@ import java.util.*;
 @RequestMapping("/users")
 public class UserController {
 
-    private final HashMap<Integer, User> database = new HashMap<>();
-
     @GetMapping
     public List<User> getAllUsers() {
         return new ArrayList<>(database.values());
