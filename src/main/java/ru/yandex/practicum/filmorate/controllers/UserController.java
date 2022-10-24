@@ -11,7 +11,6 @@ import ru.yandex.practicum.filmorate.storage.UserStorage;
 import java.util.*;
 
 @RestController
-@Slf4j
 @RequestMapping("/users")
 public class UserController {
 
@@ -35,6 +34,11 @@ public class UserController {
 
     }
 
+    @GetMapping("/{id}")
+    public User getUser(@PathVariable(value = "id") int userID) {
+        return storage.getUser(userID);
+    }
+
     @PutMapping
     public User updateUser(@RequestBody User user) {
         storage.modifyUser(user);
@@ -53,9 +57,13 @@ public class UserController {
         service.removeFriend(userID, friendID);
     }
     @GetMapping("{id}/friends/common/{otherId}")
-    public Set<User> getFriendsList(@PathVariable(value = "id") int userOneID,
+    public Set<User> getCommonFriendsList(@PathVariable(value = "id") int userOneID,
                                      @PathVariable(value = "otherId") int userTwoID) {
         return service.getCommonFriends(userOneID,userTwoID);
     }
 
+    @GetMapping("{id}/friends")
+    public List<User> getUserFriends(@PathVariable(value = "id") int userID) {
+        return service.getAllFriendsList(userID);
+    }
 }

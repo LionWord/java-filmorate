@@ -1,10 +1,11 @@
 package ru.yandex.practicum.filmorate.storage;
 
 import org.springframework.stereotype.Component;
+import ru.yandex.practicum.filmorate.exceptions.AlreadyExistsException;
 import ru.yandex.practicum.filmorate.exceptions.FailedValidationException;
 import ru.yandex.practicum.filmorate.exceptions.NoSuchEntryException;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.utils.IdAssigner;
 import ru.yandex.practicum.filmorate.utils.Messages;
 import ru.yandex.practicum.filmorate.utils.Validator;
 
@@ -20,11 +21,16 @@ public class InMemoryFilmStorage implements FilmStorage {
 
     @Override
     public void addFilm(Film film) {
-        if (Validator.isValidFilm(film)) {
-            database.put(film.getId(), film);
-        } else {
+        if (!Validator.isValidFilm(film)) {
             throw new FailedValidationException(Messages.FAILED_FILM_VALIDATION);
+        } else if (database.containsValue(film)) {
+            throw new AlreadyExistsException(Messages.FILM_ALREADY_EXISTS);
+        } else {
+            film.setId(IdAssigner.getFilmID());
+            IdAssigner.increaseFilmID();
+            database.put(film.getId(), film);
         }
+
     }
 
     @Override
