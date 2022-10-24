@@ -29,6 +29,8 @@ public class UserService {
     }
 
     public void addFriend(int userID, int friendID) {
+        log.debug("Starting method addFriend");
+        log.debug("Current ID=1 value is " + storage.getUser(1));
         if (!storage.userIsPresent(userID) || !storage.userIsPresent(friendID)) {
             throw new NoSuchEntryException(Messages.NO_SUCH_USER);
         } else if (storage.getUser(userID).gotFriend(friendID)) {
@@ -37,13 +39,19 @@ public class UserService {
             throw new FriendsAlreadyException(Messages.ALREADY_FRIENDS);
         }
 
-        storage.getDatabase().get(userID).addFriend(friendID);
-        storage.getDatabase().get(friendID).addFriend(userID);
-        log.info(storage.getUser(userID) + " and " + storage.getUser(friendID) + " now friends");
+        User userOne = storage.getUser(userID);
+        userOne.addFriend(friendID);
+        storage.modifyUser(userOne);
+        User userTwo = storage.getUser(friendID);
+        userTwo.addFriend(userID);
+        storage.modifyUser(userTwo);
 
+        log.info(storage.getUser(userID) + " and " + storage.getUser(friendID) + " now friends");
+        log.debug("Finished method addFriend");
     }
 
     public void removeFriend(int userID, int friendID) {
+        log.debug("Starting method removeFriend");
         if (!storage.userIsPresent(userID) || !storage.userIsPresent(friendID)) {
             throw new NoSuchEntryException(Messages.NO_SUCH_USER);
         } else if (!storage.getUser(userID).gotFriend(friendID)) {
@@ -55,9 +63,11 @@ public class UserService {
         storage.getDatabase().get(userID).removeFriend(friendID);
         storage.getDatabase().get(friendID).removeFriend(userID);
         log.info(storage.getUser(userID) + " and " + storage.getUser(friendID) + "are not friends");
+        log.debug("Finished method removeFriend");
     }
 
     public List<User> getAllFriendsList(int userID) {
+        log.debug("Starting method getAllFriendsList");
         if (storage.getUser(userID).getFriendsID().isEmpty()) {
             log.info("User does not have friends. Returning empty ArrayList");
             return new ArrayList<>();
@@ -66,28 +76,29 @@ public class UserService {
         for (int i : storage.getUser(userID).getFriendsID()) {
             friends.add(storage.getUser(i));
         }
-        log.info("Method getAllFriendsList is finished");
+        log.info("Finished method getAllFriendsList");
             return friends;
     }
 
     public Set<User> getCommonFriends(int userOneID, int userTwoID) {
+        log.debug("Starting method getCommonFriends");
         if (!storage.userIsPresent(userOneID) || !storage.userIsPresent(userTwoID)) {
             throw new NoSuchEntryException(Messages.NO_SUCH_USER);
         }
         Set<Integer> firstUserFriends = storage.getUser(userOneID).getFriendsID();
         Set<Integer> secondUserFriends = storage.getUser(userTwoID).getFriendsID();
         if (firstUserFriends.isEmpty() || secondUserFriends.isEmpty()) {
-            //throw new NoCommonFriendsException(Messages.NO_COMMON_FRIENDS);
             return new HashSet<>();
         }
         Set<User> result = new HashSet<>();
-        if (firstUserFriends.retainAll(secondUserFriends)) {
+        /*if (firstUserFriends.retainAll(secondUserFriends)) {
             for (int i : firstUserFriends) {
                 result.add(storage.getUser(i));
             }
-            log.info("Method getCommonFriends is finished");
+            log.info("Finished method getCommonFriends");
+            log.info("Common friends: " + result);
             return result;
-        } else {
+        }*/ else {
             throw new NoCommonFriendsException(Messages.NO_COMMON_FRIENDS);
         }
     }

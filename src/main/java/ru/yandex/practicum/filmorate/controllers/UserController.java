@@ -1,6 +1,5 @@
 package ru.yandex.practicum.filmorate.controllers;
 
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.User;
@@ -57,7 +56,7 @@ public class UserController {
         service.removeFriend(userID, friendID);
     }
     @GetMapping("{id}/friends/common/{otherId}")
-    public Set<User> getCommonFriendsList(@PathVariable(value = "id") int userOneID,
+    public Set<User> getCommonFriends(@PathVariable(value = "id") int userOneID,
                                      @PathVariable(value = "otherId") int userTwoID) {
         return service.getCommonFriends(userOneID,userTwoID);
     }
