@@ -4,11 +4,14 @@ import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exceptions.FailedValidationException;
 import ru.yandex.practicum.filmorate.exceptions.NoSuchEntryException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.utils.Messages;
 import ru.yandex.practicum.filmorate.utils.Validator;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
 
 @Component
 public class InMemoryFilmStorage implements FilmStorage {
@@ -42,9 +45,18 @@ public class InMemoryFilmStorage implements FilmStorage {
         }
         database.replace(film.getId(), film);
     }
+    public List<Film> getAllFilms() {
+        return (List<Film>) database.values();
+    }
 
-    public Map<Integer, Film> getAllUsers() {
+    public Map<Integer, Film> getDatabase() {
         return database;
     }
 
+    public boolean filmIsPresent(int filmID) {
+        return database.containsKey(filmID);
+    }
+    public Film getFilm(int filmID) {
+        return database.get(filmID);
+    }
 }

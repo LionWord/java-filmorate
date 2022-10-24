@@ -28,6 +28,8 @@ public class Messages {
     public static final String ALREADY_FRIENDS = "Users are already friends";
     public static final String NOT_FRIENDS = "Users are not friends";
 
+    public static final String TOO_BIG_VALUE = "Value is too big";
+
     private Messages() {}
 
 }

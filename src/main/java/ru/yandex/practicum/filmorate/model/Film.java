@@ -16,13 +16,16 @@ public class Film {
     private String description;
     private LocalDate releaseDate;
     private int duration;
-    private Set<String> usersThatLiked;
+    private Set<User> usersThatLiked;
 
-    public void addLike() {
-        likesAmount++;
+    public void addLike(User user) {
+        usersThatLiked.add(user);
     }
-    public void removeLike() {
-
+    public void removeLike(User user) {
+        usersThatLiked.remove(user);
     }
 
+    public int getLikesCount() {
+        return usersThatLiked.size();
+    }
 }
