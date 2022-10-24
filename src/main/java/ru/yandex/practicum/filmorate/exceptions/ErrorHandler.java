@@ -28,6 +28,12 @@ public class ErrorHandler {
     }
 
     @ExceptionHandler
+    @ResponseStatus(HttpStatus.OK)
+    public ExceptionMessage handleNoCommonFriendsException(NoCommonFriendsException e) {
+        return new ExceptionMessage(Messages.NOTHING_TO_RETURN, e.getMessage());
+    }
+
+    @ExceptionHandler
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ExceptionMessage handleUnknownException(RuntimeException e) {
         return new ExceptionMessage(Messages.SERVER_ERROR, Messages.UNKNOWN_ERROR);

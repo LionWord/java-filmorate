@@ -4,7 +4,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.services.UserService;
 import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
+import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 import java.util.*;
 
@@ -13,16 +15,17 @@ import java.util.*;
 @RequestMapping("/users")
 public class UserController {
 
-    private final InMemoryUserStorage storage;
+    private final UserStorage storage;
+    private final UserService service;
     @Autowired
-    public UserController(InMemoryUserStorage storage) {
+    public UserController(InMemoryUserStorage storage, UserService service) {
         this.storage = storage;
+        this.service = service;
     }
 
     @GetMapping
     public List<User> getAllUsers() {
         return storage.getAllUsers();
-
     }
 
     @PostMapping
@@ -39,15 +42,20 @@ public class UserController {
     }
 
     @PutMapping("{id}/friends/{friendId}")
-    public Map<String, String> befriendUser(@PathVariable(value = "id") int userID,
-                                            @PathVariable(value = "friendId") int friendID) {
-        return
+    public void befriendUser(@PathVariable(value = "id") int userID,
+                             @PathVariable(value = "friendId") int friendID) {
+        service.addFriend(userID, friendID);
     }
 
     @DeleteMapping("{id}/friends/{friendId}")
-    public Map<String, String> unfriendUser(@PathVariable(value = "id") int userID,
-                                            @PathVariable(value = "friendId") int friendID) {
-        return
+    public void unfriendUser(@PathVariable(value = "id") int userID,
+                             @PathVariable(value = "friendId") int friendID) {
+        service.removeFriend(userID, friendID);
+    }
+    @GetMapping("{id}/friends/common/{otherId}")
+    public Set<User> getFriendsList(@PathVariable(value = "id") int userOneID,
+                                     @PathVariable(value = "otherId") int userTwoID) {
+        return service.getCommonFriends(userOneID,userTwoID);
     }
 
 }

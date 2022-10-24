@@ -1,36 +1,34 @@
 package ru.yandex.practicum.filmorate.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exceptions.InvalidInputException;
 import ru.yandex.practicum.filmorate.exceptions.NoSuchEntryException;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.storage.InMemoryFilmStorage;
-import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
+import ru.yandex.practicum.filmorate.storage.FilmStorage;
+import ru.yandex.practicum.filmorate.storage.UserStorage;
 import ru.yandex.practicum.filmorate.utils.Messages;
 
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
+@Service
 public class FilmService {
 
-    private final InMemoryFilmStorage filmStorage;
-    private final InMemoryUserStorage userStorage;
-    private final Comparator<Film> sortByLikes = new Comparator<>() {
-        @Override
-        public int compare(Film f1, Film f2) {
-            if (f1.getLikesCount() < f2.getLikesCount()) {
-                return -1;
-            } else if (f1.getLikesCount() > f2.getLikesCount()) {
-                return 1;
-            } else return 0;
+    private final FilmStorage filmStorage;
+    private final UserStorage userStorage;
+    private final Comparator<Film> sortByLikes = (f1, f2) -> {
+        if (f1.getLikesCount() < f2.getLikesCount()) {
+            return -1;
+        } else if (f1.getLikesCount() > f2.getLikesCount()) {
+            return 1;
+        } else return 0;
 
-        }
     };
 
     @Autowired
-    public FilmService(InMemoryFilmStorage filmStorage, InMemoryUserStorage userStorage) {
+    public FilmService(FilmStorage filmStorage, UserStorage userStorage) {
         this.filmStorage = filmStorage;
         this.userStorage = userStorage;
     }
