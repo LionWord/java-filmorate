@@ -2,16 +2,16 @@ package ru.yandex.practicum.filmorate.exceptions;
 
 public class ExceptionMessage {
 
-    final String errorLocation;
+    final String errorCode;
     final String errorMessage;
 
-    public ExceptionMessage(String errorLocation, String errorMessage) {
-        this.errorLocation = errorLocation;
+    public ExceptionMessage(String errorCode, String errorMessage) {
+        this.errorCode = errorCode;
         this.errorMessage = errorMessage;
     }
 
-    public String getErrorLocation() {
-        return errorLocation;
+    public String getErrorCode() {
+        return errorCode;
     }
 
     public String getErrorMessage() {
