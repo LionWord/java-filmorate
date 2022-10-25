@@ -19,7 +19,6 @@ public class Messages {
 
     public static final String NO_SUCH_USER = "User with this ID does not exist";
     public static final String NO_SUCH_FILM = "Film with this ID does not exist";
-    public static final String INPUT_ERROR = "Input error";
     public static final String SERVER_ERROR = "Server error";
     public static final String REQUEST_ERROR = "Request error";
     public static final String UNKNOWN_ERROR = "Unknown error";
@@ -28,10 +27,10 @@ public class Messages {
     public static final String ALREADY_FRIENDS = "Users are already friends";
     public static final String NOT_FRIENDS = "Users are not friends";
     public static final String TOO_BIG_VALUE = "Value is too big";
-    public static final String NO_COMMON_FRIENDS = "No common friends";
     public static final String NOTHING_TO_RETURN = "Nothing to return";
 
 
-    private Messages() {}
+    private Messages() {
+    }
 
 }

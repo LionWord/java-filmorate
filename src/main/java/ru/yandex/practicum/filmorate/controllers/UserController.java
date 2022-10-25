@@ -7,7 +7,8 @@ import ru.yandex.practicum.filmorate.services.UserService;
 import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
-import java.util.*;
+import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/users")
@@ -15,6 +16,7 @@ public class UserController {
 
     private final UserStorage storage;
     private final UserService service;
+
     @Autowired
     public UserController(InMemoryUserStorage storage, UserService service) {
         this.storage = storage;
@@ -33,7 +35,7 @@ public class UserController {
 
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("{id}")
     public User getUser(@PathVariable(value = "id") int userID) {
         return storage.getUser(userID);
     }
@@ -55,10 +57,11 @@ public class UserController {
                              @PathVariable(value = "friendId") int friendID) {
         service.removeFriend(userID, friendID);
     }
+
     @GetMapping("{id}/friends/common/{otherId}")
     public Set<User> getCommonFriends(@PathVariable(value = "id") int userOneID,
-                                     @PathVariable(value = "otherId") int userTwoID) {
-        return service.getCommonFriends(userOneID,userTwoID);
+                                      @PathVariable(value = "otherId") int userTwoID) {
+        return service.getCommonFriends(userOneID, userTwoID);
     }
 
     @GetMapping("{id}/friends")

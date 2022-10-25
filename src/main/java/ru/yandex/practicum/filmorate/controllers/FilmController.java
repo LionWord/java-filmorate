@@ -18,6 +18,7 @@ public class FilmController {
 
     private final FilmStorage filmStorage;
     private final FilmService filmService;
+
     @Autowired
     public FilmController(InMemoryFilmStorage filmStorage, FilmService filmService) {
         this.filmStorage = filmStorage;
@@ -29,14 +30,21 @@ public class FilmController {
         return filmStorage.getAllFilms();
     }
 
+    @GetMapping({"{id}"})
+    public Film getFilm(@PathVariable(value = "id") int filmID) {
+        return filmStorage.getFilm(filmID);
+    }
+
     @PostMapping
-    public void addFilm(@RequestBody Film film) {
+    public Film addFilm(@RequestBody Film film) {
         filmStorage.addFilm(film);
+        return film;
     }
 
     @PutMapping
-    public void updateFilm(@RequestBody Film film) throws InvalidInputException {
+    public Film updateFilm(@RequestBody Film film) throws InvalidInputException {
         filmStorage.modifyFilm(film);
+        return film;
     }
 
     @PutMapping("{id}/like/{userId}")
@@ -44,14 +52,15 @@ public class FilmController {
                          @PathVariable(value = "userId") int userID) {
         filmService.addLike(filmID, userID);
     }
+
     @DeleteMapping("{id}/like/{userId}")
     public void unlikeFilm(@PathVariable(value = "id") int filmID,
-                         @PathVariable(value = "userId") int userID) {
+                           @PathVariable(value = "userId") int userID) {
         filmService.removeLike(filmID, userID);
     }
 
-    @GetMapping("popular?count={count}")
-    public List<Film> getMostLikedFilms(@RequestParam(value = "count") int count) {
+    @GetMapping("/popular")
+    public List<Film> getMostLikedFilms(@RequestParam(defaultValue = "10") int count) {
         return filmService.getMostPopularFilms(count);
     }
 }

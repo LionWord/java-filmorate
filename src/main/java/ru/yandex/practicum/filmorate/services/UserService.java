@@ -4,7 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exceptions.FriendsAlreadyException;
-import ru.yandex.practicum.filmorate.exceptions.NoCommonFriendsException;
 import ru.yandex.practicum.filmorate.exceptions.NoSuchEntryException;
 import ru.yandex.practicum.filmorate.exceptions.NoSuchFriendException;
 import ru.yandex.practicum.filmorate.model.User;
@@ -30,12 +29,11 @@ public class UserService {
 
     public void addFriend(int userID, int friendID) {
         log.debug("Starting method addFriend");
-        log.debug("Current ID=1 value is " + storage.getUser(1));
-        if (!storage.userIsPresent(userID) || !storage.userIsPresent(friendID)) {
+        if (storage.userIsPresent(userID) || storage.userIsPresent(friendID)) {
             throw new NoSuchEntryException(Messages.NO_SUCH_USER);
         } else if (storage.getUser(userID).gotFriend(friendID)) {
             throw new FriendsAlreadyException(Messages.ALREADY_FRIENDS);
-        }  else if (storage.getUser(friendID).gotFriend(userID)) {
+        } else if (storage.getUser(friendID).gotFriend(userID)) {
             throw new FriendsAlreadyException(Messages.ALREADY_FRIENDS);
         }
 
@@ -52,11 +50,11 @@ public class UserService {
 
     public void removeFriend(int userID, int friendID) {
         log.debug("Starting method removeFriend");
-        if (!storage.userIsPresent(userID) || !storage.userIsPresent(friendID)) {
+        if (storage.userIsPresent(userID) || storage.userIsPresent(friendID)) {
             throw new NoSuchEntryException(Messages.NO_SUCH_USER);
         } else if (!storage.getUser(userID).gotFriend(friendID)) {
             throw new NoSuchFriendException(Messages.NOT_FRIENDS);
-        }  else if (!storage.getUser(friendID).gotFriend(userID)) {
+        } else if (!storage.getUser(friendID).gotFriend(userID)) {
             throw new NoSuchFriendException(Messages.NOT_FRIENDS);
         }
 
@@ -77,12 +75,12 @@ public class UserService {
             friends.add(storage.getUser(i));
         }
         log.info("Finished method getAllFriendsList");
-            return friends;
+        return friends;
     }
 
     public Set<User> getCommonFriends(int userOneID, int userTwoID) {
         log.debug("Starting method getCommonFriends");
-        if (!storage.userIsPresent(userOneID) || !storage.userIsPresent(userTwoID)) {
+        if (storage.userIsPresent(userOneID) || storage.userIsPresent(userTwoID)) {
             throw new NoSuchEntryException(Messages.NO_SUCH_USER);
         }
         Set<Integer> firstUserFriends = storage.getUser(userOneID).getFriendsID();
@@ -91,16 +89,12 @@ public class UserService {
             return new HashSet<>();
         }
         Set<User> result = new HashSet<>();
-        /*if (firstUserFriends.retainAll(secondUserFriends)) {
-            for (int i : firstUserFriends) {
+        for (int i : firstUserFriends) {
+            if (secondUserFriends.contains(i)) {
                 result.add(storage.getUser(i));
             }
-            log.info("Finished method getCommonFriends");
-            log.info("Common friends: " + result);
-            return result;
-        }*/ else {
-            throw new NoCommonFriendsException(Messages.NO_COMMON_FRIENDS);
         }
+        return result;
     }
 
 }

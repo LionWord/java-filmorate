@@ -11,6 +11,7 @@ import ru.yandex.practicum.filmorate.utils.Messages;
 import ru.yandex.practicum.filmorate.utils.Validator;
 
 import java.util.*;
+
 @Slf4j
 @Component
 public class InMemoryUserStorage implements UserStorage {
@@ -63,9 +64,7 @@ public class InMemoryUserStorage implements UserStorage {
             return new ArrayList<>();
         } else {
             log.info("Returned values: " + database.values());
-            ArrayList<User> result = new ArrayList<>();
-            result.addAll(database.values());
-            return result;
+            return new ArrayList<>(database.values());
         }
 
     }
@@ -77,7 +76,7 @@ public class InMemoryUserStorage implements UserStorage {
 
     public boolean userIsPresent(int userID) {
         log.info("Checking if user with ID=" + userID + " is present. Result is " + database.containsKey(userID));
-        return database.containsKey(userID);
+        return !database.containsKey(userID);
     }
 
     public User getUser(int userID) {

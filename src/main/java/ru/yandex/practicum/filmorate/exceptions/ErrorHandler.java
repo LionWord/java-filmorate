@@ -25,7 +25,7 @@ public class ErrorHandler {
         return new ExceptionMessage(Messages.REQUEST_ERROR, e.getMessage());
     }
 
-    @ExceptionHandler ({AlreadyExistsException.class, FriendsAlreadyException.class})
+    @ExceptionHandler({AlreadyExistsException.class, FriendsAlreadyException.class})
     @ResponseStatus(HttpStatus.CONFLICT)
     public ExceptionMessage handleConflictException(RuntimeException e) {
         log.error(e.getMessage());

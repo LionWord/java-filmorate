@@ -156,7 +156,7 @@ class FilmorateApplicationTests {
                 .duration(-1)
                 .build();
         assertFalse(Validator.isValidFilm(film));
-  }
+    }
 
     @Test
     void shouldReturnFalseIfFilmDurationIsZero() {
