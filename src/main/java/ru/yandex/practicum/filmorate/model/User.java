@@ -21,17 +21,19 @@ public class User {
     private String login;
     private String name;
     private LocalDate birthday;
-    private final Set<Integer> friendsID = new HashSet<>();
+    private final Set<Integer> acceptedFriendsID = new HashSet<>();
+
+    private final Set<Integer> unacceptedFriendsID = new HashSet<>();
 
     public void addFriend(int friendID) {
-        friendsID.add(friendID);
+        acceptedFriendsID.add(friendID);
     }
 
     public void removeFriend(int friendID) {
-        friendsID.remove(friendID);
+        acceptedFriendsID.remove(friendID);
     }
 
     public boolean gotFriend(int friendID) {
-        return friendsID.contains(friendID);
+        return acceptedFriendsID.contains(friendID);
     }
 }

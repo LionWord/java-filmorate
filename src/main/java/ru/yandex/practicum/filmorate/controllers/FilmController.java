@@ -9,7 +9,7 @@ import ru.yandex.practicum.filmorate.exceptions.InvalidInputException;
 import ru.yandex.practicum.filmorate.exceptions.NoSuchEntryException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.services.FilmService;
-import ru.yandex.practicum.filmorate.services.Rateable;
+import ru.yandex.practicum.filmorate.services.Likeable;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.InMemoryFilmStorage;
 import ru.yandex.practicum.filmorate.utils.Messages;
@@ -23,7 +23,7 @@ import java.util.List;
 public class FilmController {
 
     private final FilmStorage filmStorage;
-    private final Rateable filmService;
+    private final Likeable filmService;
 
     @Autowired
     public FilmController(InMemoryFilmStorage filmStorage, FilmService filmService) {

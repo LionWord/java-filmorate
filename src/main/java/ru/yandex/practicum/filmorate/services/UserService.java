@@ -45,12 +45,12 @@ public class UserService implements Friendable {
     @Override
     public List<User> getAllFriendsList(int userID) {
         log.debug("Starting method getAllFriendsList");
-        if (storage.getUser(userID).getFriendsID().isEmpty()) {
+        if (storage.getUser(userID).getAcceptedFriendsID().isEmpty()) {
             log.info("User does not have friends. Returning empty ArrayList");
             return new ArrayList<>();
         }
         List<User> friends = new ArrayList<>();
-        for (int i : storage.getUser(userID).getFriendsID()) {
+        for (int i : storage.getUser(userID).getAcceptedFriendsID()) {
             friends.add(storage.getUser(i));
         }
         log.info("Finished method getAllFriendsList");
@@ -59,8 +59,8 @@ public class UserService implements Friendable {
     @Override
     public Set<User> getCommonFriends(int userOneID, int userTwoID) {
         log.debug("Starting method getCommonFriends");
-        Set<Integer> firstUserFriends = storage.getUser(userOneID).getFriendsID();
-        Set<Integer> secondUserFriends = storage.getUser(userTwoID).getFriendsID();
+        Set<Integer> firstUserFriends = storage.getUser(userOneID).getAcceptedFriendsID();
+        Set<Integer> secondUserFriends = storage.getUser(userTwoID).getAcceptedFriendsID();
         if (firstUserFriends.isEmpty() || secondUserFriends.isEmpty()) {
             return new HashSet<>();
         }

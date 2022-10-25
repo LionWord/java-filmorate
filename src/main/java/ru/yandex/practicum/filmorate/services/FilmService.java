@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 
 @Service
 @Slf4j
-public class FilmService implements Rateable{
+public class FilmService implements Likeable {
 
     private final FilmStorage filmStorage;
     private final UserStorage userStorage;
