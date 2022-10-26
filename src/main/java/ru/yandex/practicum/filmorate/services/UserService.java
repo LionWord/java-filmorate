@@ -18,7 +18,7 @@ import java.util.Set;
 
 @Service
 @Slf4j
-public class UserService {
+public class UserService implements Friendable {
 
     private final UserStorage storage;
 
@@ -26,44 +26,27 @@ public class UserService {
     public UserService(InMemoryUserStorage storage) {
         this.storage = storage;
     }
-
+    @Override
     public void addFriend(int userID, int friendID) {
         log.debug("Starting method addFriend");
-        if (storage.userIsPresent(userID) || storage.userIsPresent(friendID)) {
-            throw new NoSuchEntryException(Messages.NO_SUCH_USER);
-        } else if (storage.getUser(userID).gotFriend(friendID)) {
-            throw new FriendsAlreadyException(Messages.ALREADY_FRIENDS);
-        } else if (storage.getUser(friendID).gotFriend(userID)) {
-            throw new FriendsAlreadyException(Messages.ALREADY_FRIENDS);
-        }
-
         User userOne = storage.getUser(userID);
         userOne.addFriend(friendID);
         storage.modifyUser(userOne);
         User userTwo = storage.getUser(friendID);
         userTwo.addFriend(userID);
         storage.modifyUser(userTwo);
-
         log.info(storage.getUser(userID) + " and " + storage.getUser(friendID) + " now friends");
         log.debug("Finished method addFriend");
     }
-
+    @Override
     public void removeFriend(int userID, int friendID) {
         log.debug("Starting method removeFriend");
-        if (storage.userIsPresent(userID) || storage.userIsPresent(friendID)) {
-            throw new NoSuchEntryException(Messages.NO_SUCH_USER);
-        } else if (!storage.getUser(userID).gotFriend(friendID)) {
-            throw new NoSuchFriendException(Messages.NOT_FRIENDS);
-        } else if (!storage.getUser(friendID).gotFriend(userID)) {
-            throw new NoSuchFriendException(Messages.NOT_FRIENDS);
-        }
-
         storage.getDatabase().get(userID).removeFriend(friendID);
         storage.getDatabase().get(friendID).removeFriend(userID);
         log.info(storage.getUser(userID) + " and " + storage.getUser(friendID) + "are not friends");
         log.debug("Finished method removeFriend");
     }
-
+    @Override
     public List<User> getAllFriendsList(int userID) {
         log.debug("Starting method getAllFriendsList");
         if (storage.getUser(userID).getFriendsID().isEmpty()) {
@@ -77,12 +60,9 @@ public class UserService {
         log.info("Finished method getAllFriendsList");
         return friends;
     }
-
+    @Override
     public Set<User> getCommonFriends(int userOneID, int userTwoID) {
         log.debug("Starting method getCommonFriends");
-        if (storage.userIsPresent(userOneID) || storage.userIsPresent(userTwoID)) {
-            throw new NoSuchEntryException(Messages.NO_SUCH_USER);
-        }
         Set<Integer> firstUserFriends = storage.getUser(userOneID).getFriendsID();
         Set<Integer> secondUserFriends = storage.getUser(userTwoID).getFriendsID();
         if (firstUserFriends.isEmpty() || secondUserFriends.isEmpty()) {

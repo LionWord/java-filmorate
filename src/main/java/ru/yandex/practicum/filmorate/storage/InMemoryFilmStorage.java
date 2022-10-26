@@ -1,7 +1,7 @@
 package ru.yandex.practicum.filmorate.storage;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.exceptions.AlreadyExistsException;
 import ru.yandex.practicum.filmorate.exceptions.FailedValidationException;
 import ru.yandex.practicum.filmorate.exceptions.NoSuchEntryException;
@@ -17,7 +17,7 @@ import java.util.Map;
 
 
 @Slf4j
-@Component
+@Repository
 public class InMemoryFilmStorage implements FilmStorage {
 
     private final HashMap<Integer, Film> database = new HashMap<>();

@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 
 @Service
 @Slf4j
-public class FilmService {
+public class FilmService implements Rateable{
 
     private final FilmStorage filmStorage;
     private final UserStorage userStorage;
@@ -33,21 +33,21 @@ public class FilmService {
         this.filmStorage = filmStorage;
         this.userStorage = userStorage;
     }
-
+    @Override
     public void addLike(int filmID, int userID) {
         log.info("Starting method addLike");
-        validatePresence(filmID, userID);
+        validateFilmAndUserPresence(filmID, userID);
         filmStorage.getFilm(filmID).addLike(userStorage.getUser(userID));
         log.info("Finishing method addLike");
     }
-
+    @Override
     public void removeLike(int filmID, int userID) {
         log.info("Starting method removeLike");
-        validatePresence(filmID, userID);
+        validateFilmAndUserPresence(filmID, userID);
         filmStorage.getFilm(filmID).removeLike(userStorage.getUser(userID));
         log.info("Finishing method removeLike");
     }
-
+    @Override
     public List<Film> getMostPopularFilms(int topFilmsAmount) {
         log.info("Starting method getMostPopularFilms");
         if (topFilmsAmount <= 10 || topFilmsAmount <= filmStorage.getAllFilms().size()) {
@@ -59,8 +59,8 @@ public class FilmService {
         }
         return filmStorage.getAllFilms().stream().sorted(sortByLikes).limit(topFilmsAmount).collect(Collectors.toList());
     }
-
-    private void validatePresence(int filmID, int userID) {
+     @Override
+     public void validateFilmAndUserPresence(int filmID, int userID) {
         log.debug("Validating presence of film ID=" + filmID + " and user ID=" + userID);
         if (!filmStorage.filmIsPresent(filmID)) {
             throw new NoSuchEntryException(Messages.NO_SUCH_FILM);
