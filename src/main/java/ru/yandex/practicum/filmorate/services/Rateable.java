@@ -8,6 +8,5 @@ public interface Rateable {
     void addLike(int filmID, int userID);
     void removeLike(int filmID, int userID);
     List<Film> getMostPopularFilms(int topFilmsAmount);
-    void validateFilmAndUserPresence(int filmID, int userID);
-
+    void checkFilmAndUserPresence(int filmID, int userID);
 }

@@ -25,17 +25,10 @@ public class InMemoryFilmStorage implements FilmStorage {
     @Override
     public void addFilm(Film film) {
         log.info("Starting method addFilm");
-        if (!Validator.isValidFilm(film)) {
-            throw new FailedValidationException(Messages.FAILED_FILM_VALIDATION);
-        } else if (database.containsValue(film)) {
-            throw new AlreadyExistsException(Messages.FILM_ALREADY_EXISTS);
-        } else {
             film.setId(IdAssigner.getFilmID());
             IdAssigner.increaseFilmID();
             database.put(film.getId(), film);
             log.info("Finishing method deleteFilm");
-        }
-
     }
 
     @Override
@@ -52,13 +45,8 @@ public class InMemoryFilmStorage implements FilmStorage {
     @Override
     public void modifyFilm(Film film) {
         log.info("Starting method modifyFilm");
-        if (!Validator.isValidFilm(film)) {
-            throw new FailedValidationException(Messages.FAILED_FILM_VALIDATION);
-        } else if (!database.containsKey(film.getId())) {
-            throw new NoSuchEntryException(Messages.NO_SUCH_FILM);
-        }
-        log.info("Finishing method modifyFilm");
         database.replace(film.getId(), film);
+        log.info("Finishing method modifyFilm");
     }
 
     public List<Film> getAllFilms() {
@@ -85,11 +73,9 @@ public class InMemoryFilmStorage implements FilmStorage {
 
     public Film getFilm(int filmID) {
         log.info("Getting film");
-        if (!database.containsKey(filmID)) {
-            throw new NoSuchEntryException(Messages.NO_SUCH_FILM);
-        } else {
-            log.info("Method getFilm returned this value - " + database.get(filmID));
-            return database.get(filmID);
-        }
+        log.info("Method getFilm returned this value - " + database.get(filmID));
+        return database.get(filmID);
+
     }
+
 }

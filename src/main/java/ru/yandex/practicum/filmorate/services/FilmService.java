@@ -36,14 +36,12 @@ public class FilmService implements Rateable{
     @Override
     public void addLike(int filmID, int userID) {
         log.info("Starting method addLike");
-        validateFilmAndUserPresence(filmID, userID);
         filmStorage.getFilm(filmID).addLike(userStorage.getUser(userID));
         log.info("Finishing method addLike");
     }
     @Override
     public void removeLike(int filmID, int userID) {
         log.info("Starting method removeLike");
-        validateFilmAndUserPresence(filmID, userID);
         filmStorage.getFilm(filmID).removeLike(userStorage.getUser(userID));
         log.info("Finishing method removeLike");
     }
@@ -60,7 +58,7 @@ public class FilmService implements Rateable{
         return filmStorage.getAllFilms().stream().sorted(sortByLikes).limit(topFilmsAmount).collect(Collectors.toList());
     }
      @Override
-     public void validateFilmAndUserPresence(int filmID, int userID) {
+     public void checkFilmAndUserPresence(int filmID, int userID) {
         log.debug("Validating presence of film ID=" + filmID + " and user ID=" + userID);
         if (!filmStorage.filmIsPresent(filmID)) {
             throw new NoSuchEntryException(Messages.NO_SUCH_FILM);
