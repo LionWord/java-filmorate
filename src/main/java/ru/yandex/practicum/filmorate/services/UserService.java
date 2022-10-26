@@ -3,13 +3,9 @@ package ru.yandex.practicum.filmorate.services;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.filmorate.exceptions.FriendsAlreadyException;
-import ru.yandex.practicum.filmorate.exceptions.NoSuchEntryException;
-import ru.yandex.practicum.filmorate.exceptions.NoSuchFriendException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
-import ru.yandex.practicum.filmorate.utils.Messages;
 
 import java.util.ArrayList;
 import java.util.HashSet;

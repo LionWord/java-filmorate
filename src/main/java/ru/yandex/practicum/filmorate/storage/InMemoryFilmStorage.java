@@ -2,13 +2,10 @@ package ru.yandex.practicum.filmorate.storage;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
-import ru.yandex.practicum.filmorate.exceptions.AlreadyExistsException;
-import ru.yandex.practicum.filmorate.exceptions.FailedValidationException;
 import ru.yandex.practicum.filmorate.exceptions.NoSuchEntryException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.utils.IdAssigner;
 import ru.yandex.practicum.filmorate.utils.Messages;
-import ru.yandex.practicum.filmorate.utils.Validator;
 
 import java.util.ArrayList;
 import java.util.HashMap;
