@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.services;
+package ru.yandex.practicum.filmorate.utils;
 
 import lombok.extern.slf4j.Slf4j;
 

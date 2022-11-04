@@ -1,13 +1,15 @@
-package ru.yandex.practicum.filmorate.services;
+package ru.yandex.practicum.filmorate.utils;
 
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.time.LocalDate;
 
-public class Validator {
 
-    private Validator() {}
+public class Validator {
+    private Validator() {
+
+    }
 
     public static boolean isValidFilm(Film film) {
         return !film.getName().isEmpty()
@@ -24,4 +26,5 @@ public class Validator {
                 && !user.getLogin().isEmpty()
                 && user.getLogin() != null;
     }
+
 }
