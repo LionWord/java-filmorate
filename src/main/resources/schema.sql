@@ -1,4 +1,4 @@
-create table FRIENDS
+create table IF NOT EXISTS FRIENDS
 (
     USER_ID   INTEGER not null,
     FRIEND_ID INTEGER not null,
@@ -6,7 +6,7 @@ create table FRIENDS
         primary key (USER_ID, FRIEND_ID)
 );
 
-create table FRIENDSHIP_REQUESTS
+create table IF NOT EXISTS FRIENDSHIP_REQUESTS
 (
     RECIPIENT_ID INTEGER not null,
     SENDER_ID    INTEGER not null,
@@ -14,7 +14,7 @@ create table FRIENDSHIP_REQUESTS
         primary key (RECIPIENT_ID, SENDER_ID)
 );
 
-create table GENRES
+create table IF NOT EXISTS GENRES
 (
     GENRE_ID   INTEGER auto_increment,
     GENRE_NAME CHARACTER VARYING,
@@ -22,7 +22,7 @@ create table GENRES
         primary key (GENRE_ID)
 );
 
-create table GENRES_OF_FILMS
+create table IF NOT EXISTS GENRES_OF_FILMS
 (
     FILM_ID  INTEGER not null,
     GENRE_ID INTEGER not null,
@@ -32,7 +32,7 @@ create table GENRES_OF_FILMS
         foreign key (GENRE_ID) references GENRES
 );
 
-create table MPA_RATING
+create table IF NOT EXISTS MPA_RATING
 (
     MPA_RATING_ID INTEGER auto_increment,
     RATING_NAME   CHARACTER VARYING,
@@ -40,7 +40,7 @@ create table MPA_RATING
         primary key (MPA_RATING_ID)
 );
 
-create table FILMS
+create table IF NOT EXISTS FILMS
 (
     FILM_NAME     CHARACTER VARYING not null,
     RELEASE_DATE  DATE,
@@ -54,7 +54,7 @@ create table FILMS
         foreign key (MPA_RATING_ID) references MPA_RATING
 );
 
-create table USERS
+create table IF NOT EXISTS USERS
 (
     USER_ID   INTEGER auto_increment,
     EMAIL     CHARACTER VARYING not null,
@@ -65,7 +65,7 @@ create table USERS
         primary key (USER_ID)
 );
 
-create table USERS_LIKED_FILM
+create table IF NOT EXISTS USERS_LIKED_FILM
 (
     USER_ID INTEGER not null,
     FILM_ID INTEGER not null,
