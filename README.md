@@ -9,7 +9,7 @@
 SELECT f.film_name
 FROM Genres_Of_Films AS gof
 JOIN Film AS f ON f.film_id=gof.film_id
-WHERE genre_id = (id ужастика в таблице Genres)
+WHERE genre_id = (id ужастика в таблице genres)
 
 ТОП-5 самых популярных фильмов:
 
