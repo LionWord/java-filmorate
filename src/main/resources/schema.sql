@@ -1,20 +1,4 @@
-create table IF NOT EXISTS FRIENDS
-(
-    USER_ID   INTEGER not null,
-    FRIEND_ID INTEGER not null,
-    constraint ACCEPTED_FRIENDS_PK
-        primary key (USER_ID, FRIEND_ID)
-);
-
-create table IF NOT EXISTS FRIENDSHIP_REQUESTS
-(
-    RECIPIENT_ID INTEGER not null,
-    SENDER_ID    INTEGER not null,
-    constraint "Accepted_Friends_pk"
-        primary key (RECIPIENT_ID, SENDER_ID)
-);
-
-create table IF NOT EXISTS GENRES
+create table IF NOT NULL GENRES
 (
     GENRE_ID   INTEGER auto_increment,
     GENRE_NAME CHARACTER VARYING,
@@ -22,7 +6,7 @@ create table IF NOT EXISTS GENRES
         primary key (GENRE_ID)
 );
 
-create table IF NOT EXISTS GENRES_OF_FILMS
+create table IF NOT NULL GENRES_OF_FILMS
 (
     FILM_ID  INTEGER not null,
     GENRE_ID INTEGER not null,
@@ -32,7 +16,7 @@ create table IF NOT EXISTS GENRES_OF_FILMS
         foreign key (GENRE_ID) references GENRES
 );
 
-create table IF NOT EXISTS MPA_RATING
+create table IF NOT NULL MPA_RATING
 (
     MPA_RATING_ID INTEGER auto_increment,
     RATING_NAME   CHARACTER VARYING,
@@ -40,7 +24,7 @@ create table IF NOT EXISTS MPA_RATING
         primary key (MPA_RATING_ID)
 );
 
-create table IF NOT EXISTS FILMS
+create table IF NOT NULL FILMS
 (
     FILM_NAME     CHARACTER VARYING not null,
     RELEASE_DATE  DATE,
@@ -54,7 +38,7 @@ create table IF NOT EXISTS FILMS
         foreign key (MPA_RATING_ID) references MPA_RATING
 );
 
-create table IF NOT EXISTS USERS
+create table IF NOT NULL USER_INFO
 (
     USER_ID   INTEGER auto_increment,
     EMAIL     CHARACTER VARYING not null,
@@ -65,11 +49,39 @@ create table IF NOT EXISTS USERS
         primary key (USER_ID)
 );
 
-create table IF NOT EXISTS USERS_LIKED_FILM
+create table IF NOT NULL FRIENDS
+(
+    USER_ID   INTEGER not null,
+    FRIEND_ID INTEGER not null,
+    constraint ACCEPTED_FRIENDS_PK
+        primary key (USER_ID, FRIEND_ID),
+    constraint FOREIGN_KEY_NAME
+        foreign key (USER_ID) references USER_INFO,
+    constraint "FRIENDS_USER_INFO_USER_ID_fk"
+        foreign key (FRIEND_ID) references USER_INFO
+);
+
+create table IF NOT NULL FRIENDSHIP_REQUESTS
+(
+    RECIPIENT_ID INTEGER not null,
+    SENDER_ID    INTEGER not null,
+    constraint "Accepted_Friends_pk"
+        primary key (RECIPIENT_ID, SENDER_ID),
+    constraint "recipient FK"
+        foreign key (RECIPIENT_ID) references USER_INFO,
+    constraint "sender FK"
+        foreign key (SENDER_ID) references USER_INFO
+);
+
+create table IF NOT NULL USERS_LIKED_FILM
 (
     USER_ID INTEGER not null,
     FILM_ID INTEGER not null,
     constraint USERS_LIKED_FILM_PK
-        primary key (USER_ID, FILM_ID)
+        primary key (USER_ID, FILM_ID),
+    constraint "USERS_LIKED_FILM_FILMS_null_fk"
+        foreign key (FILM_ID) references FILMS,
+    constraint "USERS_LIKED_FILM_USER_INFO_null_fk"
+        foreign key (USER_ID) references USER_INFO
 );
 
