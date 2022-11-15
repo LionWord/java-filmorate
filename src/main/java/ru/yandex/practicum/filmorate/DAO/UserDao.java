@@ -3,12 +3,13 @@ package ru.yandex.practicum.filmorate.DAO;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface UserDao {
 
     User addUser(User user);
 
-    boolean removeUser(User user);
+    void removeUser(User user);
 
     User updateUser(User user);
 
@@ -16,7 +17,7 @@ public interface UserDao {
 
     User updateUserByEmail(String userEmail);
 
-    User getUserByEmail(String userEmail);
+    Optional<User> getUserByEmail(String userEmail);
 
     List<User> getAllUsers(int limit, String direction);
 

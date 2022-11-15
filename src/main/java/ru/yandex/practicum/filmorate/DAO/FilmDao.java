@@ -2,6 +2,8 @@ package ru.yandex.practicum.filmorate.DAO;
 
 import ru.yandex.practicum.filmorate.model.Film;
 
+import java.util.Optional;
+
 public interface FilmDao {
 
     Film addFilm(Film film);
@@ -10,9 +12,11 @@ public interface FilmDao {
 
     Film updateFilm(Film film);
 
-    boolean removeFilmByID(int ID);
+    boolean removeFilmByID(int filmID);
 
-    Film updateFilmByID(int ID);
+    Film updateFilmByID(int filmID);
+
+    Optional<Film> getFilmByID(int filmID);
 
 
 }
