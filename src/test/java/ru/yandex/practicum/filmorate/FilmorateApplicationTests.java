@@ -20,7 +20,7 @@ class FilmorateApplicationTests {
                 .id(1)
                 .birthday(LocalDate.of(1984, 12, 21))
                 .email("ilovejava@yandex.ru")
-                .name("Ivan")
+                .username("Ivan")
                 .login("Zeliboba")
                 .build();
         assertTrue(Validator.isValidUser(user));
@@ -32,7 +32,7 @@ class FilmorateApplicationTests {
                 .id(2)
                 .birthday(LocalDate.of(1984, 12, 21))
                 .email("azaza")
-                .name("Andrew")
+                .username("Andrew")
                 .login("I_HATE_VALID_EMAILS")
                 .build();
         assertFalse(Validator.isValidUser(user));
@@ -44,7 +44,7 @@ class FilmorateApplicationTests {
                 .id(4)
                 .birthday(LocalDate.of(1999, 4, 3))
                 .email("")
-                .name("Eugen Blank")
+                .username("Eugen Blank")
                 .login("E.Blank")
                 .build();
         assertFalse(Validator.isValidUser(user));
@@ -56,7 +56,7 @@ class FilmorateApplicationTests {
                 .id(6)
                 .birthday(LocalDate.of(1991, 1, 1))
                 .email("iam@login.hater")
-                .name("Olologin")
+                .username("Olologin")
                 .login("")
                 .build();
         assertFalse(Validator.isValidUser(user));
@@ -68,7 +68,7 @@ class FilmorateApplicationTests {
                 .id(5)
                 .birthday(LocalDate.of(1947, 1, 8))
                 .email("space@oddity.pun")
-                .name("David Bowie")
+                .username("David Bowie")
                 .login("Ground control to major Tom")
                 .build();
         assertFalse(Validator.isValidUser(user));
@@ -80,7 +80,7 @@ class FilmorateApplicationTests {
                 .id(3)
                 .birthday(LocalDate.of(2029, 7, 11))
                 .email("clothes@boots.motorcycle")
-                .name("T800")
+                .username("T800")
                 .login("IllBeBack")
                 .build();
         assertFalse(Validator.isValidUser(user));

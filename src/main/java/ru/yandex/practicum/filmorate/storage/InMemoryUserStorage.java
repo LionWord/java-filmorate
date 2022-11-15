@@ -17,8 +17,8 @@ public class InMemoryUserStorage implements UserStorage {
 
     @Override
     public void addUser(User user) {
-        if (Objects.isNull(user.getName()) || user.getName().isEmpty()) {
-            user.setName(user.getLogin());
+        if (Objects.isNull(user.getUsername()) || user.getUsername().isEmpty()) {
+            user.setUsername(user.getLogin());
             log.info("Name is empty. Using login instead");
         }
 
