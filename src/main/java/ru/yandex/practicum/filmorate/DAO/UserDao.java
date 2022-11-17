@@ -2,6 +2,8 @@ package ru.yandex.practicum.filmorate.DAO;
 
 import ru.yandex.practicum.filmorate.model.User;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,5 +20,7 @@ public interface UserDao {
     Optional<User> getUserByEmail(String userEmail);
 
     List<User> getAllUsers(int limit, String sortBy, String direction);
+
+    User makeUser(ResultSet rs) throws SQLException;
 
 }

@@ -86,8 +86,8 @@ public class FilmDaoImpl implements FilmDao {
 
         return Optional.empty();
     }
-
-    private Film makeFilm(ResultSet rs) throws SQLException {
+    @Override
+    public Film makeFilm(ResultSet rs) throws SQLException {
         return Film.builder()
                 .name(rs.getString("FILM_NAME"))
                 .releaseDate(rs.getDate("RELEASE_DATE").toLocalDate())

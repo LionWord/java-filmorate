@@ -88,8 +88,8 @@ public class UserDaoImpl implements UserDao {
         String sql = "select * from USER_INFO order by ? " + SortingDirection.valueOf(direction) + " limit ?";
         return jdbcTemplate.query(sql,(rs, rowNum) -> makeUser(rs), sortBy, limit);
     }
-
-    private User makeUser(ResultSet rs) throws SQLException {
+    @Override
+    public User makeUser(ResultSet rs) throws SQLException {
         User user = User.builder()
                 .email(rs.getString("EMAIL"))
                 .login(rs.getString("LOGIN"))

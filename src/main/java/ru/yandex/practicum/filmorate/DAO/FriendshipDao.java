@@ -4,6 +4,7 @@ import ru.yandex.practicum.filmorate.model.User;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public interface FriendshipDao {
 
@@ -11,8 +12,8 @@ public interface FriendshipDao {
 
     Map<String, String> acceptFriendshipRequest(String acceptorEmail, String requesterEmail);
 
-    List<User> getAllUserFriends(String userEmail);
+    Optional<List<User>> getAllUserFriends(String userEmail);
 
-    List<User> getCommonFriends(String firstUserEmail, String secondUserEmail);
+    Optional<List<User>> getCommonFriends(String firstUserEmail, String secondUserEmail);
 
 }
