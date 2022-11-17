@@ -25,6 +25,8 @@ public class Messages {
     public static final String NOT_FRIENDS = "Users are not friends";
     public static final String TOO_BIG_VALUE = "Value is too big";
 
+    public static final String INVALID_INPUT = "Invalid input";
+
     private Messages() {
     }
 

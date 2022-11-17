@@ -15,10 +15,8 @@ public interface UserDao {
 
     boolean removeUserByEmail(String userEmail);
 
-    User updateUserByEmail(String userEmail);
-
     Optional<User> getUserByEmail(String userEmail);
 
-    List<User> getAllUsers(int limit, String direction);
+    List<User> getAllUsers(int limit, String sortBy, String direction);
 
 }

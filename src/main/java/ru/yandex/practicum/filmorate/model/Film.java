@@ -1,9 +1,6 @@
 package ru.yandex.practicum.filmorate.model;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import ru.yandex.practicum.filmorate.utils.Genres;
 import ru.yandex.practicum.filmorate.utils.RatingMPA;
 
@@ -14,7 +11,7 @@ import java.util.Set;
 @Getter
 @Setter
 @ToString
-@Builder
+@Builder (access = AccessLevel.PUBLIC)
 public class Film {
 
     private int id;
