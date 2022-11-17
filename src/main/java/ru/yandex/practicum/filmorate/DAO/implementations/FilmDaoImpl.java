@@ -4,7 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.DAO.FilmDao;
+import ru.yandex.practicum.filmorate.exceptions.NoSuchEntryException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.utils.Messages;
 import ru.yandex.practicum.filmorate.utils.RatingMPA;
 
 import java.sql.ResultSet;
@@ -39,22 +41,40 @@ public class FilmDaoImpl implements FilmDao {
 
     @Override
     public boolean removeFilm(Film film) {
-        return false;
+        return removeFilmByID(film.getId());
     }
 
     @Override
     public Film updateFilm(Film film) {
-        return null;
+        String sql = "update FILMS " +
+                "set FILM_NAME = ?, RELEASE_DATE = ?, DURATION = ?, DESCRIPTION = ?, MPA_RATING_ID = ? " +
+                "where FILM_ID = ?";
+        try {
+            jdbcTemplate.update(sql,
+                    film.getName(),
+                    film.getReleaseDate(),
+                    film.getDuration(),
+                    film.getDescription(),
+                    film.getRatingMPA(),
+                    film.getId());
+        } catch (Exception e) {
+            return null;
+        }
+        return film;
     }
 
     @Override
     public boolean removeFilmByID(int filmID) {
-        return false;
-    }
-
-    @Override
-    public Film updateFilmByID(int filmID) {
-        return null;
+        if (getFilmByID(filmID).isEmpty()) {
+            throw new NoSuchEntryException(Messages.NO_SUCH_FILM);
+        }
+        String sql = "delete from FILMS where FILM_ID = ?";
+        try {
+            jdbcTemplate.update(sql, filmID);
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
     }
 
     @Override

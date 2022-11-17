@@ -14,8 +14,6 @@ public interface FilmDao {
 
     boolean removeFilmByID(int filmID);
 
-    Film updateFilmByID(int filmID);
-
     Optional<Film> getFilmByID(int filmID);
 
 
