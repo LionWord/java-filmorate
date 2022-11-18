@@ -8,11 +8,11 @@ import java.util.Optional;
 
 public interface FriendshipDao {
 
-    boolean sendFriendshipRequest(String senderEmail, String recipientEmail);
+    boolean sendFriendshipRequest(int senderID, int recipientID);
 
-    Map<String, String> acceptFriendshipRequest(String acceptorEmail, String requesterEmail);
+    Map<Integer, Integer> acceptFriendshipRequest(int acceptorID, int requesterID);
 
-    Optional<List<User>> getAllUserFriends(String userEmail);
+    Optional<List<User>> getAllUserFriends(int userID);
 
     Optional<List<User>> getCommonFriends(String firstUserEmail, String secondUserEmail);
 

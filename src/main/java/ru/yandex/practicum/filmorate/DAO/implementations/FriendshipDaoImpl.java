@@ -2,14 +2,11 @@ package ru.yandex.practicum.filmorate.DAO.implementations;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.DAO.FriendshipDao;
+import ru.yandex.practicum.filmorate.DAO.UserDao;
 import ru.yandex.practicum.filmorate.model.User;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -18,19 +15,19 @@ import java.util.Optional;
 public class FriendshipDaoImpl implements FriendshipDao {
 
     JdbcTemplate jdbcTemplate;
-    UserDaoImpl userDaoImpl;
+    UserDao userDao;
 
     @Autowired
-    public FriendshipDaoImpl(JdbcTemplate jdbcTemplate, UserDaoImpl userDaoImpl) {
+    public FriendshipDaoImpl(JdbcTemplate jdbcTemplate, UserDao userDao) {
         this.jdbcTemplate = jdbcTemplate;
-        this.userDaoImpl = userDaoImpl;
+        this.userDao = userDao;
     }
 
     @Override
-    public boolean sendFriendshipRequest(String senderEmail, String recipientEmail) {
-        String sql = "insert into FRIENDSHIP_REQUESTS (RECIPIENT_EMAIL, SENDER_EMAIL) values (?, ?)";
+    public boolean sendFriendshipRequest(int senderID, int recipientID) {
+        String sql = "insert into FRIENDSHIP_REQUESTS (RECIPIENT_ID, SENDER_ID) values (?, ?)";
         try {
-            jdbcTemplate.update(sql, recipientEmail, senderEmail);
+            jdbcTemplate.update(sql, recipientID, senderID);
         } catch (Exception e) {
             return false;
         }
@@ -38,31 +35,31 @@ public class FriendshipDaoImpl implements FriendshipDao {
     }
 
     @Override
-    public Map<String, String> acceptFriendshipRequest(String acceptorEmail, String requesterEmail) {
-        String sql = "delete from FRIENDSHIP_REQUESTS where RECIPIENT_EMAIL = ? and SENDER_EMAIL = ?;" +
-                "insert into FRIENDS (USER_EMAIL, FRIEND_EMAIL) values (?, ?)";
+    public Map<Integer, Integer> acceptFriendshipRequest(int acceptorID, int requesterID) {
+        String sql = "delete from FRIENDSHIP_REQUESTS where RECIPIENT_ID = ? and SENDER_ID = ?;" +
+                "insert into FRIENDS (USER_ID, FRIEND_ID) values (?, ?)";
         try {
-            jdbcTemplate.update(sql, acceptorEmail, requesterEmail, acceptorEmail, requesterEmail);
+            jdbcTemplate.update(sql, acceptorID, requesterID, acceptorID, requesterID);
         } catch (Exception e) {
             return Map.of();
         }
-        return Map.of(acceptorEmail, requesterEmail);
+        return Map.of(acceptorID, requesterID);
     }
 
     @Override
-    public Optional<List<User>> getAllUserFriends(String userEmail) {
+    public Optional<List<User>> getAllUserFriends(int userID) {
         String sql = "select u.* from USER_INFO as u " +
-                "inner join FRIENDS as f on f.USER_EMAIL = u.EMAIL " +
-                "where u.EMAIL = (select f.FRIEND_EMAIL from f where USER_EMAIL = ?)";
-        return Optional.ofNullable(jdbcTemplate.query(sql, (rs, rowNum) -> userDaoImpl.makeUser(rs), userEmail));
+                "inner join FRIENDS as f on f.USER_ID = u.ID " +
+                "where u.ID = (select f.FRIEND_ID from f where USER_ID = ?)";
+        return Optional.ofNullable(jdbcTemplate.query(sql, (rs, rowNum) -> userDao.makeUser(rs), userID));
     }
 
     @Override
-    public Optional<List<User>> getCommonFriends(String firstUserEmail, String secondUserEmail) {
+    public Optional<List<User>> getCommonFriends(String firstUserID, String secondUserID) {
         String sql = "select u.* from USER_INFO as u " +
-                "inner join FRIENDS as f on f.USER_EMAIL = u.EMAIL " +
-                "where u.EMAIL = (select f.FRIEND_EMAIL from f where USER_EMAIL = ?) " +
-                "and u.EMAIL = (select f.FRIEND_EMAIL from f where USER_EMAIL = ?)";
-        return Optional.ofNullable(jdbcTemplate.query(sql, (rs, rowNum) -> userDaoImpl.makeUser(rs), firstUserEmail, secondUserEmail));
+                "inner join FRIENDS as f on f.USER_ID = u.ID " +
+                "where u.ID = (select f.FRIEND_ID from f where USER_ID = ?) " +
+                "and u.ID = (select f.FRIEND_ID from f where USER_ID = ?)";
+        return Optional.ofNullable(jdbcTemplate.query(sql, (rs, rowNum) -> userDao.makeUser(rs), firstUserID, secondUserID));
     }
 }

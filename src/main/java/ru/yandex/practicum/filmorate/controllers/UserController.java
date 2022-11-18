@@ -6,8 +6,8 @@ import ru.yandex.practicum.filmorate.exceptions.*;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.services.Friendable;
 import ru.yandex.practicum.filmorate.services.UserService;
-import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
+import ru.yandex.practicum.filmorate.storage.implementations.UserDbStorage;
 import ru.yandex.practicum.filmorate.utils.Messages;
 import ru.yandex.practicum.filmorate.utils.Validator;
 
@@ -22,7 +22,7 @@ public class UserController {
     private final Friendable service;
 
     @Autowired
-    public UserController(InMemoryUserStorage storage, UserService service) {
+    public UserController(UserDbStorage storage, UserService service) {
         this.storage = storage;
         this.service = service;
     }
@@ -64,16 +64,16 @@ public class UserController {
     }
 
     @PutMapping("{id}/friends/{friendId}")
-    public void befriendUser(@PathVariable(value = "id") int userID,
-                             @PathVariable(value = "friendId") int friendID) {
-        if (storage.userIsPresent(userID) || storage.userIsPresent(friendID)) {
+    public void befriendUser(@PathVariable(value = "id") String userEmail,
+                             @PathVariable(value = "friendId") String friendEmail) {
+        if (storage.userIsPresent(userEmail) || storage.userIsPresent(friendEmail)) {
             throw new NoSuchEntryException(Messages.NO_SUCH_USER);
-        } else if (storage.getUser(userID).gotFriend(friendID)) {
+        } else if (storage.getUser(userEmail).gotFriend(friendEmail)) {
             throw new FriendsAlreadyException(Messages.ALREADY_FRIENDS);
-        } else if (storage.getUser(friendID).gotFriend(userID)) {
+        } else if (storage.getUser(friendEmail).gotFriend(userEmail)) {
             throw new FriendsAlreadyException(Messages.ALREADY_FRIENDS);
         }
-        service.addFriend(userID, friendID);
+        service.addFriend(userEmail, friendEmail);
     }
 
     @DeleteMapping("{id}/friends/{friendId}")

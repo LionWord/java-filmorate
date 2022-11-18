@@ -15,11 +15,13 @@ public interface UserDao {
 
     User updateUser(User user);
 
-    boolean removeUserByEmail(String userEmail);
+    boolean removeUserById(int userID);
 
-    Optional<User> getUserByEmail(String userEmail);
+    Optional<User> getUserById(int userID);
 
     List<User> getAllUsers(int limit, String sortBy, String direction);
+
+    List<User> getAllUsers();
 
     User makeUser(ResultSet rs) throws SQLException;
 

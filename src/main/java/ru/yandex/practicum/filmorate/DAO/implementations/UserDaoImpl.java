@@ -32,7 +32,7 @@ public class UserDaoImpl implements UserDao {
     @Override
     public User addUser(User user) {
         String sql = "insert into USER_INFO (EMAIL, LOGIN, USER_NAME, BIRTHDAY) values (?,?,?,?)";
-        if (!getUserByEmail(user.getEmail()).isEmpty()) {
+        if (!getUserById(user.getId()).isEmpty()) {
             throw new AlreadyExistsException(Messages.USER_ALREADY_EXISTS);
         }
         try {
@@ -45,14 +45,14 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public void removeUser(User user) {
-       removeUserByEmail(user.getEmail());
+       removeUserById(user.getId());
     }
 
     @Override
     public User updateUser(User user) {
-        String sql = "update USER_INFO set LOGIN = ?, USER_NAME = ?, BIRTHDAY = ? where EMAIL = ?";
+        String sql = "update USER_INFO set LOGIN = ?, USER_NAME = ?, BIRTHDAY = ? where ID = ?";
         try {
-            jdbcTemplate.update(sql, user.getLogin(), user.getUsername(), user.getBirthday(), user.getEmail());
+            jdbcTemplate.update(sql, user.getLogin(), user.getUsername(), user.getBirthday(), user.getId());
         } catch (Exception e) {
             return null;
         }
@@ -60,13 +60,13 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public boolean removeUserByEmail(String userEmail) {
-        if (getUserByEmail(userEmail).isEmpty()) {
+    public boolean removeUserById(int userID) {
+        if (getUserById(userID).isEmpty()) {
             throw new NoSuchEntryException(Messages.NO_SUCH_USER);
         }
-        String sql = "delete from USER_INFO where EMAIL = ?";
+        String sql = "delete from USER_INFO where ID = ?";
         try {
-            jdbcTemplate.update(sql, userEmail);
+            jdbcTemplate.update(sql, userID);
         } catch (Exception e) {
             return false;
         }
@@ -74,9 +74,9 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public Optional<User> getUserByEmail(String userEmail) {
-        String sql = "select * from USER_INFO where EMAIL = ?";
-        return Optional.ofNullable(jdbcTemplate.queryForObject(sql, (rs, rowNum) -> makeUser(rs), userEmail));
+    public Optional<User> getUserById(int userID) {
+        String sql = "select * from USER_INFO where ID = ?";
+        return Optional.ofNullable(jdbcTemplate.queryForObject(sql, (rs, rowNum) -> makeUser(rs), userID));
     }
 
     @Override
@@ -88,9 +88,16 @@ public class UserDaoImpl implements UserDao {
         String sql = "select * from USER_INFO order by ? " + SortingDirection.valueOf(direction) + " limit ?";
         return jdbcTemplate.query(sql,(rs, rowNum) -> makeUser(rs), sortBy, limit);
     }
+
+    @Override
+    public List<User> getAllUsers() {
+        String sql = "select * from USER_INFO";
+        return jdbcTemplate.query(sql,(rs, rowNum) -> makeUser(rs));
+    }
     @Override
     public User makeUser(ResultSet rs) throws SQLException {
         User user = User.builder()
+                .id(rs.getInt("ID"))
                 .email(rs.getString("EMAIL"))
                 .login(rs.getString("LOGIN"))
                 .username(rs.getString("USER_NAME"))

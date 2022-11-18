@@ -58,11 +58,11 @@ public class FilmService implements Likeable {
         return filmStorage.getAllFilms().stream().sorted(sortByLikes).limit(topFilmsAmount).collect(Collectors.toList());
     }
      @Override
-     public void checkFilmAndUserPresence(int filmID, int userID) {
-        log.debug("Validating presence of film ID=" + filmID + " and user ID=" + userID);
+     public void checkFilmAndUserPresence(int filmID, String userEmail) {
+        log.debug("Validating presence of film ID=" + filmID + " and user Email=" + userEmail);
         if (!filmStorage.filmIsPresent(filmID)) {
             throw new NoSuchEntryException(Messages.NO_SUCH_FILM);
-        } else if (userStorage.userIsPresent(userID)) {
+        } else if (userStorage.userIsPresent(userEmail)) {
             throw new NoSuchEntryException(Messages.NO_SUCH_USER);
         }
         log.debug("Presence successfully validated");

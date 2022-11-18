@@ -15,8 +15,6 @@ public interface UserStorage {
 
     List<User> getAllUsers();
 
-    Map<Integer, User> getDatabase();
-
     boolean userIsPresent(int userID);
 
     User getUser(int userID);
