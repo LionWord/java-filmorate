@@ -14,8 +14,8 @@ import java.util.Optional;
 @Component
 public class FriendshipDaoImpl implements FriendshipDao {
 
-    JdbcTemplate jdbcTemplate;
-    UserDao userDao;
+    final JdbcTemplate jdbcTemplate;
+    final UserDao userDao;
 
     @Autowired
     public FriendshipDaoImpl(JdbcTemplate jdbcTemplate, UserDao userDao) {
@@ -51,7 +51,7 @@ public class FriendshipDaoImpl implements FriendshipDao {
         String sql = "select u.* from USER_INFO as u " +
                 "inner join FRIENDS as f on f.USER_ID = u.ID " +
                 "where u.ID = (select f.FRIEND_ID from f where USER_ID = ?)";
-        return Optional.ofNullable(jdbcTemplate.query(sql, (rs, rowNum) -> userDao.makeUser(rs), userID));
+        return Optional.of(jdbcTemplate.query(sql, (rs, rowNum) -> userDao.makeUser(rs), userID));
     }
 
     @Override
@@ -60,7 +60,7 @@ public class FriendshipDaoImpl implements FriendshipDao {
                 "inner join FRIENDS as f on f.USER_ID = u.ID " +
                 "where u.ID = (select f.FRIEND_ID from f where USER_ID = ?) " +
                 "and u.ID = (select f.FRIEND_ID from f where USER_ID = ?)";
-        return Optional.ofNullable(jdbcTemplate.query(sql, (rs, rowNum) -> userDao.makeUser(rs), firstUserID, secondUserID));
+        return Optional.of(jdbcTemplate.query(sql, (rs, rowNum) -> userDao.makeUser(rs), firstUserID, secondUserID));
     }
 
     @Override

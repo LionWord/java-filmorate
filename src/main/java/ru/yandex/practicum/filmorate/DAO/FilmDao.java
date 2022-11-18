@@ -4,6 +4,7 @@ import ru.yandex.practicum.filmorate.model.Film;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Optional;
 
 public interface FilmDao {
@@ -19,5 +20,7 @@ public interface FilmDao {
     Optional<Film> getFilmByID(int filmID);
 
     Film makeFilm(ResultSet rs) throws SQLException;
+
+    Optional<List<Film>> getAllFilms();
 
 }

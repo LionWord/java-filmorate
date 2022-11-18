@@ -3,9 +3,9 @@ package ru.yandex.practicum.filmorate.DAO.implementations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
+import ru.yandex.practicum.filmorate.DAO.FilmDao;
 import ru.yandex.practicum.filmorate.DAO.LikesDao;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.model.User;
 
 import java.util.List;
 import java.util.Map;
@@ -14,11 +14,13 @@ import java.util.Optional;
 @Component
 public class LikesDaoImpl implements LikesDao {
 
-    JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
+    private final FilmDao filmDao;
 
     @Autowired
-    public LikesDaoImpl(JdbcTemplate jdbcTemplate) {
+    public LikesDaoImpl(JdbcTemplate jdbcTemplate, FilmDao filmDao) {
         this.jdbcTemplate = jdbcTemplate;
+        this.filmDao = filmDao;
     }
 
     @Override
@@ -47,5 +49,13 @@ public class LikesDaoImpl implements LikesDao {
     public Optional<List<Integer>> allUsersLikedSpecificFilm(int filmID) {
         String sql = "select USER_ID from USERS_LIKED_FILM where FILM_ID = ?";
         return Optional.of(jdbcTemplate.queryForList(sql, Integer.class, filmID));
+    }
+
+    @Override
+    public List<Film> getMostPopularFilms(int limit) {
+        String sql = "select * from FILMS order by RATE desc limit ?";
+        return jdbcTemplate.query(sql, (rs, rowNum) -> filmDao.makeFilm(rs), limit);
+
+
     }
 }

@@ -22,6 +22,7 @@ create table FILMS
     DURATION      INTEGER,
     DESCRIPTION   CHARACTER VARYING(200),
     MPA_RATING_ID INTEGER,
+    RATE          INTEGER,
     constraint PRIMARY_KEY
         primary key (FILM_ID),
     constraint "FILM_MPA_Rating_null_fk"

@@ -11,12 +11,13 @@ import ru.yandex.practicum.filmorate.utils.RatingMPA;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Optional;
 
 @Component
 public class FilmDaoImpl implements FilmDao {
 
-    JdbcTemplate jdbcTemplate;
+    final JdbcTemplate jdbcTemplate;
 
     @Autowired
     public FilmDaoImpl(JdbcTemplate jdbcTemplate) {
@@ -96,6 +97,12 @@ public class FilmDaoImpl implements FilmDao {
                 .description(rs.getString("DESCRIPTION"))
                 .ratingMPA(RatingMPA.valueOf(rs.getString("m.RATING_NAME")))
                 .build();
+    }
+
+    @Override
+    public Optional<List<Film>> getAllFilms() {
+        String sql = "select * from FILMS";
+        return Optional.of(jdbcTemplate.query(sql, ((rs, rowNum) -> makeFilm(rs))));
     }
 
 }

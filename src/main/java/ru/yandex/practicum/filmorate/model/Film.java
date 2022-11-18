@@ -20,18 +20,7 @@ public class Film {
     private LocalDate releaseDate;
     private int duration;
     private RatingMPA ratingMPA;
+    private int rate;
     private final Set<Genres> genres = new HashSet<>();
-    private final Set<User> usersThatLiked = new HashSet<>();
 
-    public void addLike(User user) {
-        usersThatLiked.add(user);
-    }
-
-    public void removeLike(User user) {
-        usersThatLiked.remove(user);
-    }
-
-    public int getLikesCount() {
-        return usersThatLiked.size();
-    }
 }

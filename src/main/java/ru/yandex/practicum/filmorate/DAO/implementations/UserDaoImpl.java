@@ -2,9 +2,6 @@ package ru.yandex.practicum.filmorate.DAO.implementations;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.support.rowset.SqlRowSet;
-import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.DAO.UserDao;
 import ru.yandex.practicum.filmorate.exceptions.AlreadyExistsException;
@@ -22,7 +19,7 @@ import java.util.Optional;
 @Component
 public class UserDaoImpl implements UserDao {
 
-    JdbcTemplate jdbcTemplate;
+    final JdbcTemplate jdbcTemplate;
 
     @Autowired
     public UserDaoImpl(JdbcTemplate jdbcTemplate) {
@@ -32,7 +29,7 @@ public class UserDaoImpl implements UserDao {
     @Override
     public User addUser(User user) {
         String sql = "insert into USER_INFO (EMAIL, LOGIN, USER_NAME, BIRTHDAY) values (?,?,?,?)";
-        if (!getUserById(user.getId()).isEmpty()) {
+        if (getUserById(user.getId()).isPresent()) {
             throw new AlreadyExistsException(Messages.USER_ALREADY_EXISTS);
         }
         try {
@@ -96,14 +93,13 @@ public class UserDaoImpl implements UserDao {
     }
     @Override
     public User makeUser(ResultSet rs) throws SQLException {
-        User user = User.builder()
+        return User.builder()
                 .id(rs.getInt("ID"))
                 .email(rs.getString("EMAIL"))
                 .login(rs.getString("LOGIN"))
                 .username(rs.getString("USER_NAME"))
                 .birthday(rs.getDate("BIRTHDAY").toLocalDate())
                 .build();
-        return user;
     }
 
 }
