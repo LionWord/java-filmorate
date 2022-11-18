@@ -2,6 +2,7 @@ package ru.yandex.practicum.filmorate.storage.implementations;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.DAO.UserDao;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
@@ -11,10 +12,10 @@ import java.util.Map;
 
 import static org.springframework.util.ObjectUtils.isEmpty;
 
-@Component
+@Repository
 public class UserDbStorage implements UserStorage {
 
-    UserDao userDao;
+    private final UserDao userDao;
 
     @Autowired
     public UserDbStorage(UserDao userDaoImpl) {
@@ -48,6 +49,6 @@ public class UserDbStorage implements UserStorage {
 
     @Override
     public User getUser(int userID) {
-        userDao.getUserById(userID);
+        return userDao.getUserById(userID).get();
     }
 }

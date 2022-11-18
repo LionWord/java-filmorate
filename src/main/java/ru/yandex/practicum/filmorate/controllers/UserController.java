@@ -12,94 +12,93 @@ import ru.yandex.practicum.filmorate.utils.Messages;
 import ru.yandex.practicum.filmorate.utils.Validator;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @RestController
 @RequestMapping("/users")
 public class UserController {
 
-    private final UserStorage storage;
-    private final Friendable service;
+    private final UserService service;
 
     @Autowired
-    public UserController(UserDbStorage storage, UserService service) {
-        this.storage = storage;
+    public UserController(UserService service) {
         this.service = service;
     }
 
     @GetMapping
     public List<User> getAllUsers() {
-        return storage.getAllUsers();
+        return service.getAllUsers();
     }
 
     @PostMapping
     public User addUser(@RequestBody User user) {
         if (!Validator.isValidUser(user)) {
             throw new FailedValidationException(Messages.FAILED_USER_VALIDATION);
-        } else if (storage.getDatabase().containsKey(user.getId())) {
+        } else if (service.userIsPresent(user.getId())) {
             throw new AlreadyExistsException(Messages.USER_ALREADY_EXISTS);
         }
-        storage.addUser(user);
+        service.addUser(user);
         return user;
 
     }
 
     @GetMapping("{id}")
     public User getUser(@PathVariable(value = "id") int userID) {
-        if (!storage.getDatabase().containsKey(userID)) {
+        if (!service.userIsPresent(userID)) {
             throw new NoSuchEntryException(Messages.NO_SUCH_USER);
         }
-        return storage.getUser(userID);
+        return service.getUser(userID);
     }
 
     @PutMapping
     public User updateUser(@RequestBody User user) {
         if (!Validator.isValidUser(user)) {
             throw new FailedValidationException(Messages.FAILED_USER_VALIDATION);
-        } else if (!storage.getDatabase().containsKey(user.getId())) {
+        } else if (!service.userIsPresent(user.getId())) {
             throw new NoSuchEntryException(Messages.NO_SUCH_USER);
         }
-        storage.modifyUser(user);
+        service.modifyUser(user);
         return user;
     }
 
     @PutMapping("{id}/friends/{friendId}")
-    public void befriendUser(@PathVariable(value = "id") String userEmail,
-                             @PathVariable(value = "friendId") String friendEmail) {
-        if (storage.userIsPresent(userEmail) || storage.userIsPresent(friendEmail)) {
+    public void befriendUser(@PathVariable(value = "id") int userID,
+                             @PathVariable(value = "friendId") int friendID) {
+        if (!service.userIsPresent(userID) || !service.userIsPresent(friendID)) {
             throw new NoSuchEntryException(Messages.NO_SUCH_USER);
-        } else if (storage.getUser(userEmail).gotFriend(friendEmail)) {
+        } else if (service.getAllFriendsList(userID).get().contains(service.getUser(friendID))) {
             throw new FriendsAlreadyException(Messages.ALREADY_FRIENDS);
-        } else if (storage.getUser(friendEmail).gotFriend(userEmail)) {
+        } else if (service.getAllFriendsList(friendID).get().contains(service.getUser(userID))) {
             throw new FriendsAlreadyException(Messages.ALREADY_FRIENDS);
         }
-        service.addFriend(userEmail, friendEmail);
+        service.addFriend(userID, friendID);
     }
 
     @DeleteMapping("{id}/friends/{friendId}")
     public void unfriendUser(@PathVariable(value = "id") int userID,
                              @PathVariable(value = "friendId") int friendID) {
-        if (storage.userIsPresent(userID) || storage.userIsPresent(friendID)) {
+        if (!service.userIsPresent(userID) || !service.userIsPresent(friendID)) {
             throw new NoSuchEntryException(Messages.NO_SUCH_USER);
-        } else if (!storage.getUser(userID).gotFriend(friendID)) {
+        } else if (!service.getAllFriendsList(userID).get().contains(service.getUser(friendID))) {
             throw new NoSuchFriendException(Messages.NOT_FRIENDS);
-        } else if (!storage.getUser(friendID).gotFriend(userID)) {
+        } else if (!service.getAllFriendsList(friendID).get().contains(service.getUser(userID))) {
             throw new NoSuchFriendException(Messages.NOT_FRIENDS);
         }
         service.removeFriend(userID, friendID);
     }
 
     @GetMapping("{id}/friends/common/{otherId}")
-    public Set<User> getCommonFriends(@PathVariable(value = "id") int userOneID,
-                                      @PathVariable(value = "otherId") int userTwoID) {
-        if (storage.userIsPresent(userOneID) || storage.userIsPresent(userTwoID)) {
+    public Optional<List<User>> getCommonFriends(@PathVariable(value = "id") int userOneID,
+                                           @PathVariable(value = "otherId") int userTwoID) {
+        if (service.userIsPresent(userOneID) || service.userIsPresent(userTwoID)) {
             throw new NoSuchEntryException(Messages.NO_SUCH_USER);
         }
         return service.getCommonFriends(userOneID, userTwoID);
     }
 
     @GetMapping("{id}/friends")
-    public List<User> getUserFriends(@PathVariable(value = "id") int userID) {
+    public Optional<List<User>> getUserFriends(@PathVariable(value = "id") int userID) {
         return service.getAllFriendsList(userID);
     }
 }

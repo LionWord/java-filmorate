@@ -14,6 +14,7 @@ public interface FriendshipDao {
 
     Optional<List<User>> getAllUserFriends(int userID);
 
-    Optional<List<User>> getCommonFriends(String firstUserEmail, String secondUserEmail);
+    Optional<List<User>> getCommonFriends(int firstUserID, int secondUserID);
 
+    boolean removeFriends(int userID, int friendID);
 }
