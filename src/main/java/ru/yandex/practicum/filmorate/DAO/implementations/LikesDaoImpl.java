@@ -22,21 +22,21 @@ public class LikesDaoImpl implements LikesDao {
     }
 
     @Override
-    public Map<String, Integer> userLikeFilm(String userEmail, int filmID) {
-        String sql = "insert into USERS_LIKED_FILM (USER_EMAIL, FILM_ID) values (?,?)";
+    public Map<Integer, Integer> userLikeFilm(int userID, int filmID) {
+        String sql = "insert into USERS_LIKED_FILM (USER_ID, FILM_ID) values (?,?)";
         try {
-            jdbcTemplate.update(sql, userEmail, filmID);
+            jdbcTemplate.update(sql, userID, filmID);
         } catch (Exception e) {
             return Map.of();
         }
-        return Map.of(userEmail, filmID);
+        return Map.of(userID, filmID);
     }
 
     @Override
-    public boolean userRemoveLike(String userEmail, int filmID) {
-        String sql = "delete from USERS_LIKED_FILM where USER_EMAIL = ? and FILM_ID = ?";
+    public boolean userRemoveLike(int userID, int filmID) {
+        String sql = "delete from USERS_LIKED_FILM where USER_ID = ? and FILM_ID = ?";
         try {
-            jdbcTemplate.update(sql, userEmail, filmID);
+            jdbcTemplate.update(sql, userID, filmID);
         } catch (Exception e) {
             return false;
         }
@@ -44,8 +44,8 @@ public class LikesDaoImpl implements LikesDao {
     }
 
     @Override
-    public Optional<List<String>> allUsersLikedSpecificFilm(int filmID) {
-        String sql = "select USER_EMAIL from USERS_LIKED_FILM where FILM_ID = ?";
-        return Optional.of(jdbcTemplate.queryForList(sql, String.class, filmID));
+    public Optional<List<Integer>> allUsersLikedSpecificFilm(int filmID) {
+        String sql = "select USER_ID from USERS_LIKED_FILM where FILM_ID = ?";
+        return Optional.of(jdbcTemplate.queryForList(sql, Integer.class, filmID));
     }
 }

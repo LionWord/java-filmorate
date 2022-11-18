@@ -9,7 +9,7 @@ import java.util.Optional;
 
 public interface LikesDao {
 
-    Map<String, Integer> userLikeFilm (String userEmail, int filmID);
-    boolean userRemoveLike(String userEmail, int filmID);
-    Optional<List<String>> allUsersLikedSpecificFilm(int filmID);
+    public Map<Integer, Integer> userLikeFilm(int userID, int filmID);
+    public boolean userRemoveLike(int userID, int filmID);
+    public Optional<List<Integer>> allUsersLikedSpecificFilm(int filmID);
 }
