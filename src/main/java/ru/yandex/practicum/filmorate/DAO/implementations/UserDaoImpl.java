@@ -30,15 +30,18 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public User addUser(User user) {
-        String sql = "insert into USER_INFO (EMAIL, LOGIN, USER_NAME, BIRTHDAY, ID) values (?,?,?,?,?)";
-        if (Optional.ofNullable(getUserById(user.getId())).isPresent()) {
+        String sql = "insert into USER_INFO (EMAIL, LOGIN, USER_NAME, BIRTHDAY) values (?,?,?,?)";
+        String returnSql = "select * from USER_INFO where EMAIL = ?";
+        if (checkIfEmailIsInDatabase(user.getEmail())) {
             throw new AlreadyExistsException(Messages.USER_ALREADY_EXISTS);
         }
         try {
-            jdbcTemplate.update(sql, user.getEmail(), user.getLogin(), user.getName(), user.getBirthday(), user.getId());
+            jdbcTemplate.update(sql, user.getEmail(), user.getLogin(), user.getName(), user.getBirthday());
         } catch (Exception e) {
             return null;
         }
+        user.setId(jdbcTemplate.query(returnSql,(rs, rowNum) -> makeUser(rs), user.getEmail()).get(0).getId());
+        System.out.println(user);
         return user;
     }
 
@@ -49,9 +52,9 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public User updateUser(User user) {
-        String sql = "update USER_INFO set LOGIN = ?, USER_NAME = ?, BIRTHDAY = ? where ID = ?";
+        String sql = "update USER_INFO set LOGIN = ?, USER_NAME = ?, BIRTHDAY = ?, EMAIL = ? where ID = ?";
         try {
-            jdbcTemplate.update(sql, user.getLogin(), user.getName(), user.getBirthday(), user.getId());
+            jdbcTemplate.update(sql, user.getLogin(), user.getName(), user.getBirthday(), user.getEmail(), user.getId());
         } catch (Exception e) {
             return null;
         }
@@ -107,6 +110,15 @@ public class UserDaoImpl implements UserDao {
                 .name(rs.getString("USER_NAME"))
                 .birthday(rs.getDate("BIRTHDAY").toLocalDate())
                 .build();
+    }
+
+    private boolean checkIfEmailIsInDatabase(String email) {
+        String sql = "select * from USER_INFO where EMAIL = ?";
+        try {
+            return jdbcTemplate.query(sql,(rs, rowNum) -> makeUser(rs), email).equals(null);
+        } catch (Exception e) {
+            return false;
+        }
     }
 
 }
