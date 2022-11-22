@@ -1,3 +1,4 @@
+-- we don't know how to generate root <with-no-name> (class Root) :(
 create table IF NOT EXISTS GENRES
 (
     GENRE_ID   INTEGER auto_increment,
@@ -88,4 +89,3 @@ create table IF NOT EXISTS USERS_LIKED_FILM
     constraint "USERS_LIKED_FILM_USER_INFO_null_fk"
         foreign key (USER_ID) references USER_INFO (ID)
 );
-

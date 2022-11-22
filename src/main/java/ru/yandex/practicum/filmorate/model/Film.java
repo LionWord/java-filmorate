@@ -1,6 +1,7 @@
 package ru.yandex.practicum.filmorate.model;
 
 import lombok.*;
+import org.springframework.beans.factory.annotation.Value;
 import ru.yandex.practicum.filmorate.utils.Genres;
 import ru.yandex.practicum.filmorate.utils.RatingMPA;
 

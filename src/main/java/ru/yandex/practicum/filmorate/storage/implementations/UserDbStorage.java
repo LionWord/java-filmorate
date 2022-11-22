@@ -1,16 +1,18 @@
 package ru.yandex.practicum.filmorate.storage.implementations;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.DAO.UserDao;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.springframework.util.ObjectUtils.isEmpty;
 
-@Repository
+@Component
 public class UserDbStorage implements UserStorage {
 
     private final UserDao userDao;
@@ -42,7 +44,10 @@ public class UserDbStorage implements UserStorage {
 
     @Override
     public boolean userIsPresent(int userID) {
-        return !isEmpty(userDao.getUserById(userID));
+        if (Optional.ofNullable(userDao.getUserById(userID)).isEmpty()) {
+            return false;
+        }
+        return true;
     }
 
     @Override

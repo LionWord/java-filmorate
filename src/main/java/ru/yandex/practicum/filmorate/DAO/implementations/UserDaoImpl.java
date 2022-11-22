@@ -1,6 +1,7 @@
 package ru.yandex.practicum.filmorate.DAO.implementations;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.DAO.UserDao;
@@ -8,6 +9,7 @@ import ru.yandex.practicum.filmorate.exceptions.AlreadyExistsException;
 import ru.yandex.practicum.filmorate.exceptions.InvalidInputException;
 import ru.yandex.practicum.filmorate.exceptions.NoSuchEntryException;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.utils.IdAssigner;
 import ru.yandex.practicum.filmorate.utils.Messages;
 import ru.yandex.practicum.filmorate.utils.SortingDirection;
 
@@ -28,12 +30,12 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public User addUser(User user) {
-        String sql = "insert into USER_INFO (EMAIL, LOGIN, USER_NAME, BIRTHDAY) values (?,?,?,?)";
-        if (getUserById(user.getId()).isPresent()) {
+        String sql = "insert into USER_INFO (EMAIL, LOGIN, USER_NAME, BIRTHDAY, ID) values (?,?,?,?,?)";
+        if (Optional.ofNullable(getUserById(user.getId())).isPresent()) {
             throw new AlreadyExistsException(Messages.USER_ALREADY_EXISTS);
         }
         try {
-            jdbcTemplate.update(sql, user.getEmail(), user.getLogin(), user.getUsername(), user.getBirthday());
+            jdbcTemplate.update(sql, user.getEmail(), user.getLogin(), user.getName(), user.getBirthday(), user.getId());
         } catch (Exception e) {
             return null;
         }
@@ -49,7 +51,7 @@ public class UserDaoImpl implements UserDao {
     public User updateUser(User user) {
         String sql = "update USER_INFO set LOGIN = ?, USER_NAME = ?, BIRTHDAY = ? where ID = ?";
         try {
-            jdbcTemplate.update(sql, user.getLogin(), user.getUsername(), user.getBirthday(), user.getId());
+            jdbcTemplate.update(sql, user.getLogin(), user.getName(), user.getBirthday(), user.getId());
         } catch (Exception e) {
             return null;
         }
@@ -71,9 +73,14 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public Optional<User> getUserById(int userID) {
+    public Optional<User> getUserById(int userID) throws EmptyResultDataAccessException {
         String sql = "select * from USER_INFO where ID = ?";
-        return Optional.ofNullable(jdbcTemplate.queryForObject(sql, (rs, rowNum) -> makeUser(rs), userID));
+        try {
+            return Optional.of(jdbcTemplate.queryForObject(sql, (rs, rowNum) -> makeUser(rs), userID));
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
+
     }
 
     @Override
@@ -97,7 +104,7 @@ public class UserDaoImpl implements UserDao {
                 .id(rs.getInt("ID"))
                 .email(rs.getString("EMAIL"))
                 .login(rs.getString("LOGIN"))
-                .username(rs.getString("USER_NAME"))
+                .name(rs.getString("USER_NAME"))
                 .birthday(rs.getDate("BIRTHDAY").toLocalDate())
                 .build();
     }
