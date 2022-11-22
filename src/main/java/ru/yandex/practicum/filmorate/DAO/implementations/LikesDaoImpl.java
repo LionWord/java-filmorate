@@ -25,9 +25,10 @@ public class LikesDaoImpl implements LikesDao {
 
     @Override
     public Map<Integer, Integer> userLikeFilm(int userID, int filmID) {
-        String sql = "insert into USERS_LIKED_FILM (USER_ID, FILM_ID) values (?,?)";
+        String sql = "insert into USERS_LIKED_FILM (USER_ID, FILM_ID) values (?,?);" +
+                "update FILMS set RATE = RATE + 1 where FILM_ID = (?)";
         try {
-            jdbcTemplate.update(sql, userID, filmID);
+            jdbcTemplate.update(sql, userID, filmID, filmID);
         } catch (Exception e) {
             return Map.of();
         }
@@ -36,9 +37,10 @@ public class LikesDaoImpl implements LikesDao {
 
     @Override
     public boolean userRemoveLike(int userID, int filmID) {
-        String sql = "delete from USERS_LIKED_FILM where USER_ID = ? and FILM_ID = ?";
+        String sql = "delete from USERS_LIKED_FILM where USER_ID = ? and FILM_ID = ?;" +
+                "update FILMS set RATE = RATE - 1 where FILM_ID = (?)";
         try {
-            jdbcTemplate.update(sql, userID, filmID);
+            jdbcTemplate.update(sql, userID, filmID, filmID);
         } catch (Exception e) {
             return false;
         }
@@ -55,7 +57,5 @@ public class LikesDaoImpl implements LikesDao {
     public List<Film> getMostPopularFilms(int limit) {
         String sql = "select * from FILMS order by RATE desc limit ?";
         return jdbcTemplate.query(sql, (rs, rowNum) -> filmDao.makeFilm(rs), limit);
-
-
     }
 }
