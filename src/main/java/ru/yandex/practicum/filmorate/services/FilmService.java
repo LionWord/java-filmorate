@@ -6,6 +6,9 @@ import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.DAO.FilmDao;
 import ru.yandex.practicum.filmorate.DAO.LikesDao;
 import ru.yandex.practicum.filmorate.DAO.UserDao;
+import ru.yandex.practicum.filmorate.DAO.implementations.FilmDaoImpl;
+import ru.yandex.practicum.filmorate.DAO.implementations.LikesDaoImpl;
+import ru.yandex.practicum.filmorate.DAO.implementations.UserDaoImpl;
 import ru.yandex.practicum.filmorate.exceptions.NoSuchEntryException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.utils.Messages;
@@ -22,7 +25,7 @@ public class FilmService implements Likeable {
     private final LikesDao likesDao;
 
     @Autowired
-    public FilmService(FilmDao filmDao, UserDao userDao, LikesDao likesDao) {
+    public FilmService(FilmDaoImpl filmDao, UserDaoImpl userDao, LikesDaoImpl likesDao) {
         this.filmDao = filmDao;
         this.userDao = userDao;
         this.likesDao = likesDao;
