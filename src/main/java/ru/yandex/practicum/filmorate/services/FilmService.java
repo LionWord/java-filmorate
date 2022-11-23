@@ -48,7 +48,7 @@ public class FilmService implements Likeable {
     }
 
     public boolean filmIsPresent(int filmID) {
-        return filmDao.getFilmByID(filmID).isEmpty();
+        return filmDao.getFilmByID(filmID).isPresent();
     }
 
     public Optional<Film> getFilm(int filmID){

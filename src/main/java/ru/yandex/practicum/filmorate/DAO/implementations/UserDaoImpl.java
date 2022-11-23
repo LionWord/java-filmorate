@@ -9,7 +9,6 @@ import ru.yandex.practicum.filmorate.exceptions.AlreadyExistsException;
 import ru.yandex.practicum.filmorate.exceptions.InvalidInputException;
 import ru.yandex.practicum.filmorate.exceptions.NoSuchEntryException;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.utils.IdAssigner;
 import ru.yandex.practicum.filmorate.utils.Messages;
 import ru.yandex.practicum.filmorate.utils.SortingDirection;
 
@@ -42,11 +41,6 @@ public class UserDaoImpl implements UserDao {
         }
         user.setId(jdbcTemplate.query(returnSql,(rs, rowNum) -> makeUser(rs), user.getEmail()).get(0).getId());
         return user;
-    }
-
-    @Override
-    public void removeUser(User user) {
-       removeUserById(user.getId());
     }
 
     @Override
@@ -83,16 +77,6 @@ public class UserDaoImpl implements UserDao {
             return null;
         }
 
-    }
-
-    @Override
-    public List<User> getAllUsers(int limit, String sortBy, String direction) {
-        if (!direction.equalsIgnoreCase(SortingDirection.ASC.name())
-                & !direction.equalsIgnoreCase(SortingDirection.DESC.name())) {
-            throw new InvalidInputException(Messages.INVALID_INPUT);
-        }
-        String sql = "select * from USER_INFO order by ? " + SortingDirection.valueOf(direction) + " limit ?";
-        return jdbcTemplate.query(sql,(rs, rowNum) -> makeUser(rs), sortBy, limit);
     }
 
     @Override

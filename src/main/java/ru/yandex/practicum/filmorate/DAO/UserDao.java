@@ -11,15 +11,11 @@ public interface UserDao {
 
     User addUser(User user);
 
-    void removeUser(User user);
-
     User updateUser(User user);
 
     boolean removeUserById(int userID);
 
     Optional<User> getUserById(int userID);
-
-    List<User> getAllUsers(int limit, String sortBy, String direction);
 
     List<User> getAllUsers();
 

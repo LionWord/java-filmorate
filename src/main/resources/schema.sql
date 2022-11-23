@@ -1,18 +1,16 @@
 -- we don't know how to generate root <with-no-name> (class Root) :(
 create table IF NOT EXISTS GENRES
 (
-    GENRE_ID   INTEGER auto_increment,
-    GENRE_NAME CHARACTER VARYING,
-    constraint "GENRES_pk"
-        primary key (GENRE_ID)
+    GENRE_ID   INTEGER auto_increment primary key,
+    GENRE_NAME CHARACTER VARYING
+
 );
 
 create table IF NOT EXISTS MPA_RATING
 (
-    MPA_RATING_ID INTEGER,
-    RATING_NAME   CHARACTER VARYING,
-    constraint "MPA_Rating_pk"
-        primary key (MPA_RATING_ID)
+    MPA_ID INTEGER primary key,
+    RATING_NAME CHARACTER VARYING
+
 );
 
 create table IF NOT EXISTS FILMS
@@ -23,9 +21,7 @@ create table IF NOT EXISTS FILMS
     DURATION      INTEGER,
     DESCRIPTION   CHARACTER VARYING(200),
     MPA_RATING_ID INTEGER,
-    RATE          INTEGER,
-    constraint "FILM_MPA_Rating_null_fk"
-        foreign key (MPA_RATING_ID) references MPA_RATING
+    RATE          INTEGER DEFAULT 0
 );
 
 create table IF NOT EXISTS GENRES_OF_FILMS
@@ -117,10 +113,12 @@ ALTER TABLE FILMS
 ALTER COLUMN FILM_ID
 RESTART WITH 1;
 
-insert into MPA_RATING (RATING_NAME)
-values ('G'),
-       ('PG'),
-       ('PG-13'),
-       ('R'),
-       ('NC-17');
+insert into MPA_RATING (MPA_ID, RATING_NAME)
+values (1, 'G'),(2, 'PG'),(3, 'PG-13'),(4, 'R'),(5, 'NC-17');
 
+ALTER TABLE GENRES
+ALTER COLUMN GENRE_ID
+RESTART WITH 1;
+
+insert into GENRES (GENRE_NAME)
+values ('COMEDY'),('ACTION'),('DRAMA'),('THRILLER'),('CARTOON'),('DOCUMENTARY');

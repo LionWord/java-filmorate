@@ -26,6 +26,9 @@ public class Messages {
     public static final String TOO_BIG_VALUE = "Value is too big";
 
     public static final String INVALID_INPUT = "Invalid input";
+    public static final String INVALID_MPA = "Invalid MPA ID";
+
+    public static final String TRY_ANOTHER_ID = "Try another filmID or userID";
 
     private Messages() {
     }

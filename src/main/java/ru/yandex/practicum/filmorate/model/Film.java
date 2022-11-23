@@ -1,16 +1,10 @@
 package ru.yandex.practicum.filmorate.model;
 
 import lombok.*;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.lang.Nullable;
-import ru.yandex.practicum.filmorate.utils.Genres;
-import ru.yandex.practicum.filmorate.utils.RatingMPA;
+import org.springframework.boot.context.properties.bind.DefaultValue;
 
-import java.time.LocalDate;
 import java.sql.Date;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 @Getter
 @Setter
@@ -26,5 +20,6 @@ public class Film {
     private int duration;
     private Map<String, Integer> mpa;
     private int rate;
+    private Map<String, Integer>[] genres;
 
 }

@@ -7,7 +7,6 @@ import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.FriendsStorage;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 import ru.yandex.practicum.filmorate.storage.implementations.UserDbStorage;
-import ru.yandex.practicum.filmorate.utils.IdAssigner;
 
 import java.util.*;
 

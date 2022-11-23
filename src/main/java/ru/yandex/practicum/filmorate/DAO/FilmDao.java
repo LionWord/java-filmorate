@@ -11,8 +11,6 @@ public interface FilmDao {
 
     Film addFilm(Film film);
 
-    boolean removeFilm(Film film);
-
     Film updateFilm(Film film);
 
     boolean removeFilmByID(int filmID);

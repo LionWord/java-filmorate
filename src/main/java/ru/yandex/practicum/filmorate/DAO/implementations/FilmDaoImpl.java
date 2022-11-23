@@ -9,13 +9,10 @@ import ru.yandex.practicum.filmorate.DAO.FilmDao;
 import ru.yandex.practicum.filmorate.exceptions.NoSuchEntryException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.utils.Messages;
-import ru.yandex.practicum.filmorate.utils.RatingMPA;
 
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -33,7 +30,7 @@ public class FilmDaoImpl implements FilmDao {
     @Override
     public Film addFilm(Film film) {
         String sql = "insert into FILMS (FILM_NAME, RELEASE_DATE, DURATION, DESCRIPTION, MPA_RATING_ID) values(?,?,?,?,?)";
-        /*KeyHolder keyHolder = new GeneratedKeyHolder();
+        KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, new String[] { "FILM_ID" });
@@ -43,38 +40,10 @@ public class FilmDaoImpl implements FilmDao {
             ps.setString(4, film.getDescription());
             ps.setInt(5, film.getMpa().get("id"));
             return ps;
-        }, keyHolder);*/
-
-        try {
-            jdbcTemplate.update(sql,
-                    film.getName(),
-                    film.getReleaseDate(),
-                    film.getDuration(),
-                    film.getDescription(),
-                    film.getMpa().get("id"));
-            } catch (Exception e) {
-            return null;
-        }
-            String returnSql = "select * from FILMS " +
-                    "where FILM_NAME = ? " +
-                    "AND RELEASE_DATE = ? " +
-                    "AND DURATION = ? " +
-                    "AND DESCRIPTION = ?" +
-                    "AND MPA_RATING_ID = ?";
-
-            film.setId(jdbcTemplate.query(returnSql, (rs, rowNum) -> makeFilm(rs),
-                    film.getName(),
-                    film.getReleaseDate(),
-                    film.getDuration(),
-                    film.getDescription(),
-                    film.getMpa()).get(0).getId());
+        }, keyHolder);
+            film.setId(keyHolder.getKey().intValue());
             return film;
         }
-
-    @Override
-    public boolean removeFilm(Film film) {
-        return removeFilmByID(film.getId());
-    }
 
     @Override
     public Film updateFilm(Film film) {
@@ -87,7 +56,7 @@ public class FilmDaoImpl implements FilmDao {
                     film.getReleaseDate(),
                     film.getDuration(),
                     film.getDescription(),
-                    film.getMpa(),
+                    film.getMpa().get("id"),
                     film.getId());
         } catch (Exception e) {
             return null;
@@ -111,12 +80,14 @@ public class FilmDaoImpl implements FilmDao {
 
     @Override
     public Optional<Film> getFilmByID(int filmID) {
-        String sql = "select f.* from FILMS as f " +
-                "JOIN MPA_RATING as m ON f.MPA_RATING_ID=m.MPA_RATING_ID " +
-                "where f.FILM_ID = ?";
-        jdbcTemplate.queryForObject(sql, ((rs, rowNum) -> makeFilm(rs)), filmID);
+        String sql = "select * from FILMS " +
+                "where FILM_ID = ?";
+       try {
+           return Optional.ofNullable(jdbcTemplate.queryForObject(sql, ((rs, rowNum) -> makeFilm(rs)), filmID));
+       } catch (Exception e) {
+           throw new NoSuchEntryException(Messages.NO_SUCH_FILM);
+       }
 
-        return Optional.empty();
     }
     @Override
     public Film makeFilm(ResultSet rs) throws SQLException {
