@@ -48,9 +48,9 @@ public class FriendshipDaoImpl implements FriendshipDao {
 
     @Override
     public Optional<List<User>> getAllUserFriends(int userID) {
-        String sql = "select u.* from USER_INFO as u " +
-                "inner join FRIENDS as f on f.USER_ID = u.ID " +
-                "where u.ID = (select f.FRIEND_ID from f where USER_ID = ?)";
+        String sql = "select * from USER_INFO as u " +
+                "inner join FRIENDS as f on f.FRIEND_ID=u.ID " +
+                "where f.USER_ID = ?";
         return Optional.of(jdbcTemplate.query(sql, (rs, rowNum) -> userDao.makeUser(rs), userID));
     }
 
@@ -58,9 +58,13 @@ public class FriendshipDaoImpl implements FriendshipDao {
     public Optional<List<User>> getCommonFriends(int firstUserID, int secondUserID) {
         String sql = "select u.* from USER_INFO as u " +
                 "inner join FRIENDS as f on f.USER_ID = u.ID " +
-                "where u.ID = (select f.FRIEND_ID from f where USER_ID = ?) " +
-                "and u.ID = (select f.FRIEND_ID from f where USER_ID = ?)";
-        return Optional.of(jdbcTemplate.query(sql, (rs, rowNum) -> userDao.makeUser(rs), firstUserID, secondUserID));
+                "where u.ID = (select FRIEND_ID from FRIENDS where USER_ID = ?) " +
+                "and u.ID = (select FRIEND_ID from FRIENDS where USER_ID = ?)";
+        try {
+            return Optional.of(jdbcTemplate.query(sql, (rs, rowNum) -> userDao.makeUser(rs), firstUserID, secondUserID));
+        } catch (Exception e) {
+            return Optional.empty();
+        }
     }
 
     @Override
