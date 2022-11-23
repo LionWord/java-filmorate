@@ -56,14 +56,22 @@ public class FriendshipDaoImpl implements FriendshipDao {
 
     @Override
     public Optional<List<User>> getCommonFriends(int firstUserID, int secondUserID) {
-        String sql = "select u.* from USER_INFO as u " +
-                "inner join FRIENDS as f on f.USER_ID = u.ID " +
-                "where u.ID = (select FRIEND_ID from FRIENDS where USER_ID = ?) " +
-                "and u.ID = (select FRIEND_ID from FRIENDS where USER_ID = ?)";
+        String sql = "select * from USER_INFO as uf " +
+                "join " +
+                "(select * " +
+                " from FRIENDS " +
+                " where USER_ID = ? " +
+                ") as userOne " +
+                "join " +
+                "(select * " +
+                " from FRIENDS " +
+                " where USER_ID = ?) as userTwo " +
+                "on userOne.FRIEND_ID = userTwo.FRIEND_ID " +
+                "where uf.ID = userOne.FRIEND_ID and uf.ID = userTwo.FRIEND_ID ";
         try {
             return Optional.of(jdbcTemplate.query(sql, (rs, rowNum) -> userDao.makeUser(rs), firstUserID, secondUserID));
         } catch (Exception e) {
-            return Optional.empty();
+            return Optional.of(List.of());
         }
     }
 

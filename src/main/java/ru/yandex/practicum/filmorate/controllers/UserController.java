@@ -87,7 +87,7 @@ public class UserController {
     @GetMapping("{id}/friends/common/{otherId}")
     public Optional<List<User>> getCommonFriends(@PathVariable(value = "id") int userOneID,
                                            @PathVariable(value = "otherId") int userTwoID) {
-        if (service.userIsPresent(userOneID) || service.userIsPresent(userTwoID)) {
+        if (!service.userIsPresent(userOneID) || !service.userIsPresent(userOneID)) {
             throw new NoSuchEntryException(Messages.NO_SUCH_USER);
         }
         return service.getCommonFriends(userOneID, userTwoID);
