@@ -78,8 +78,6 @@ public class UserController {
             throw new NoSuchEntryException(Messages.NO_SUCH_USER);
         } else if (!service.getAllFriendsList(userID).get().contains(service.getUser(friendID))) {
             throw new NoSuchFriendException(Messages.NOT_FRIENDS);
-        } else if (!service.getAllFriendsList(friendID).get().contains(service.getUser(userID))) {
-            throw new NoSuchFriendException(Messages.NOT_FRIENDS);
         }
         service.removeFriend(userID, friendID);
     }

@@ -9,6 +9,8 @@ import java.time.LocalDate;
 @Setter
 @ToString
 @Builder(access = AccessLevel.PUBLIC)
+@EqualsAndHashCode
+
 public class User {
 
     private int id;
