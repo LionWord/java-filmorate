@@ -2,6 +2,8 @@ package ru.yandex.practicum.filmorate.DAO.implementations;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.DAO.FilmDao;
 import ru.yandex.practicum.filmorate.exceptions.NoSuchEntryException;
@@ -9,9 +11,13 @@ import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.utils.Messages;
 import ru.yandex.practicum.filmorate.utils.RatingMPA;
 
+import java.sql.Date;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Component
@@ -27,16 +33,41 @@ public class FilmDaoImpl implements FilmDao {
     @Override
     public Film addFilm(Film film) {
         String sql = "insert into FILMS (FILM_NAME, RELEASE_DATE, DURATION, DESCRIPTION, MPA_RATING_ID) values(?,?,?,?,?)";
+        /*KeyHolder keyHolder = new GeneratedKeyHolder();
+
+        jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(sql, new String[] { "FILM_ID" });
+            ps.setString(1, film.getName());
+            ps.setDate(2, film.getReleaseDate());
+            ps.setInt(3, film.getDuration());
+            ps.setString(4, film.getDescription());
+            ps.setInt(5, film.getMpa().get("id"));
+            return ps;
+        }, keyHolder);*/
+
         try {
             jdbcTemplate.update(sql,
                     film.getName(),
                     film.getReleaseDate(),
                     film.getDuration(),
                     film.getDescription(),
-                    film.getRatingMPA());
+                    film.getMpa().get("id"));
             } catch (Exception e) {
             return null;
         }
+            String returnSql = "select * from FILMS " +
+                    "where FILM_NAME = ? " +
+                    "AND RELEASE_DATE = ? " +
+                    "AND DURATION = ? " +
+                    "AND DESCRIPTION = ?" +
+                    "AND MPA_RATING_ID = ?";
+
+            film.setId(jdbcTemplate.query(returnSql, (rs, rowNum) -> makeFilm(rs),
+                    film.getName(),
+                    film.getReleaseDate(),
+                    film.getDuration(),
+                    film.getDescription(),
+                    film.getMpa()).get(0).getId());
             return film;
         }
 
@@ -56,7 +87,7 @@ public class FilmDaoImpl implements FilmDao {
                     film.getReleaseDate(),
                     film.getDuration(),
                     film.getDescription(),
-                    film.getRatingMPA(),
+                    film.getMpa(),
                     film.getId());
         } catch (Exception e) {
             return null;
@@ -91,11 +122,11 @@ public class FilmDaoImpl implements FilmDao {
     public Film makeFilm(ResultSet rs) throws SQLException {
         return Film.builder()
                 .name(rs.getString("FILM_NAME"))
-                .releaseDate(rs.getDate("RELEASE_DATE").toLocalDate())
+                .releaseDate(rs.getDate("RELEASE_DATE"))
                 .id(rs.getInt("FILM_ID"))
                 .duration(rs.getInt("DURATION"))
                 .description(rs.getString("DESCRIPTION"))
-                .ratingMPA(RatingMPA.valueOf(rs.getString("m.RATING_NAME")))
+                .mpa(Map.of("id", rs.getInt(("MPA_RATING_ID"))))
                 .build();
     }
 

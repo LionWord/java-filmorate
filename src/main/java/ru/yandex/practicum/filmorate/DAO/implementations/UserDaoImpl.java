@@ -41,7 +41,6 @@ public class UserDaoImpl implements UserDao {
             return null;
         }
         user.setId(jdbcTemplate.query(returnSql,(rs, rowNum) -> makeUser(rs), user.getEmail()).get(0).getId());
-        System.out.println(user);
         return user;
     }
 

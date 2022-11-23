@@ -43,8 +43,6 @@ public class FilmController {
     public Film addFilm(@RequestBody Film film) {
         if (!Validator.isValidFilm(film)) {
             throw new FailedValidationException(Messages.FAILED_FILM_VALIDATION);
-        } else if (filmService.filmIsPresent(film.getId())) {
-            throw new AlreadyExistsException(Messages.FILM_ALREADY_EXISTS);
         }
         filmService.addFilm(film);
         return film;
