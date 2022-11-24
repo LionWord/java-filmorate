@@ -6,6 +6,7 @@ import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.utils.Validator;
 
+import java.sql.Date;
 import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -92,7 +93,7 @@ class OldFilmorateApplicationTests {
                 .id(1)
                 .name("Godfather")
                 .description("Stylish guys kill each other")
-                .releaseDate(LocalDate.of(1972, 3, 14))
+                .releaseDate(Date.valueOf(LocalDate.of(1972, 3, 14)))
                 .duration(175)
                 .build();
         assertTrue(Validator.isValidFilm(film));
@@ -104,7 +105,7 @@ class OldFilmorateApplicationTests {
                 .id(2)
                 .name("Stoneage")
                 .description("Can't beat Lumiere brothers.")
-                .releaseDate(LocalDate.of(1895, 12, 27))
+                .releaseDate(Date.valueOf(LocalDate.of(1895, 12, 27)))
                 .duration(60)
                 .build();
         assertFalse(Validator.isValidFilm(film));
@@ -128,7 +129,7 @@ class OldFilmorateApplicationTests {
                         "Na na na na nah na na nah na na nah na na nah na na nah.\n" +
                         "Na na na na nan na na nan, na na nah,\n" +
                         "na na na na nah.")
-                .releaseDate(LocalDate.of(1966, 1, 1))
+                .releaseDate(Date.valueOf(LocalDate.of(1966, 1, 1)))
                 .duration(3)
                 .build();
         assertFalse(Validator.isValidFilm(film));
@@ -140,7 +141,7 @@ class OldFilmorateApplicationTests {
                 .id(4)
                 .name("")
                 .description("Hush! I'm anonymous!")
-                .releaseDate(LocalDate.of(1999, 12, 27))
+                .releaseDate(Date.valueOf(LocalDate.of(1999, 12, 27)))
                 .duration(60)
                 .build();
         assertFalse(Validator.isValidFilm(film));
@@ -152,7 +153,7 @@ class OldFilmorateApplicationTests {
                 .id(5)
                 .name("Pessimist")
                 .description("I'm lesser than zero! What a shame!")
-                .releaseDate(LocalDate.of(1999, 12, 27))
+                .releaseDate(Date.valueOf(LocalDate.of(1999, 12, 27)))
                 .duration(-1)
                 .build();
         assertFalse(Validator.isValidFilm(film));
@@ -164,7 +165,7 @@ class OldFilmorateApplicationTests {
                 .id(6)
                 .name("Smashing Pumpkins")
                 .description("I'm your lover, i'm your zero")
-                .releaseDate(LocalDate.of(1996, 4, 23))
+                .releaseDate(Date.valueOf(LocalDate.of(1996, 4, 23)))
                 .duration(0)
                 .build();
         assertFalse(Validator.isValidFilm(film));

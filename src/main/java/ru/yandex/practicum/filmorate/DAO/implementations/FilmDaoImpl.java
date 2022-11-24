@@ -6,25 +6,31 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.DAO.FilmDao;
+import ru.yandex.practicum.filmorate.DAO.GenreDao;
+import ru.yandex.practicum.filmorate.DAO.MpaDao;
 import ru.yandex.practicum.filmorate.exceptions.NoSuchEntryException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.Genre;
+import ru.yandex.practicum.filmorate.model.MPA;
 import ru.yandex.practicum.filmorate.utils.Messages;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @Component
 public class FilmDaoImpl implements FilmDao {
 
-    final JdbcTemplate jdbcTemplate;
-
+    private final JdbcTemplate jdbcTemplate;
+    private final MpaDao mpaDao;
+    private final GenreDao genreDao;
     @Autowired
-    public FilmDaoImpl(JdbcTemplate jdbcTemplate) {
+    public FilmDaoImpl(JdbcTemplate jdbcTemplate, MpaDao mpaDao, GenreDao genreDao) {
         this.jdbcTemplate = jdbcTemplate;
+        this.mpaDao = mpaDao;
+        this.genreDao = genreDao;
     }
 
     @Override
@@ -38,7 +44,7 @@ public class FilmDaoImpl implements FilmDao {
             ps.setDate(2, film.getReleaseDate());
             ps.setInt(3, film.getDuration());
             ps.setString(4, film.getDescription());
-            ps.setInt(5, film.getMpa().get("id"));
+            ps.setInt(5, film.getMpa().getId());
             return ps;
         }, keyHolder);
             film.setId(keyHolder.getKey().intValue());
@@ -56,7 +62,7 @@ public class FilmDaoImpl implements FilmDao {
                     film.getReleaseDate(),
                     film.getDuration(),
                     film.getDescription(),
-                    film.getMpa().get("id"),
+                    film.getMpa(),
                     film.getId());
         } catch (Exception e) {
             return null;
@@ -89,15 +95,20 @@ public class FilmDaoImpl implements FilmDao {
        }
 
     }
+
+    //need to fix
     @Override
     public Film makeFilm(ResultSet rs) throws SQLException {
+        MPA mpa = mpaDao.getMpaByID(rs.getInt("MPA_RATING_ID"));
+        List<Genre> genresList = genreDao.getGenresOfFilm(rs.getInt("FILM_ID"));
         return Film.builder()
                 .name(rs.getString("FILM_NAME"))
                 .releaseDate(rs.getDate("RELEASE_DATE"))
                 .id(rs.getInt("FILM_ID"))
                 .duration(rs.getInt("DURATION"))
                 .description(rs.getString("DESCRIPTION"))
-                .mpa(Map.of("id", rs.getInt(("MPA_RATING_ID"))))
+                .mpa(mpa)
+                .genres(genresList)
                 .build();
     }
 

@@ -4,6 +4,7 @@ import lombok.*;
 import org.springframework.boot.context.properties.bind.DefaultValue;
 
 import java.sql.Date;
+import java.util.List;
 import java.util.Map;
 
 @Getter
@@ -20,6 +21,6 @@ public class Film {
     private int duration;
     private MPA mpa;
     private int rate;
-    private Map<String, Integer>[] genres;
+    private List<Genre> genres;
 
 }
