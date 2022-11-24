@@ -17,9 +17,8 @@ import ru.yandex.practicum.filmorate.utils.Messages;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Component
 public class FilmDaoImpl implements FilmDao {
@@ -74,9 +73,16 @@ public class FilmDaoImpl implements FilmDao {
         } catch (Exception e) {
             return null;
         }
-        if (film.getGenres() != null) {
+        if (returnUpdatedGenresList(film).containsKey(1)) {
+            film.setGenres(returnUpdatedGenresList(film).get(1));
+            genreDao.disconnectGenreAndFilm(film);
+            if (film.getGenres() == null) {
+                return film;
+            }
+            genreDao.connectGenreAndFilm(film);
             return setFilmGenres(film);
         }
+
         return film;
     }
 
@@ -101,8 +107,9 @@ public class FilmDaoImpl implements FilmDao {
         Film film;
        try {
            film = Optional.ofNullable(jdbcTemplate.queryForObject(sql, ((rs, rowNum) -> makeFilm(rs)), filmID)).get();
-           if (film.getGenres() != null) {
-               film = setFilmGenres(film);
+           if (genreDao.getGenresOfFilm(filmID) != null) {
+
+               film.setGenres(makeGenresList(filmID));
            }
        } catch (Exception e) {
            throw new NoSuchEntryException(Messages.NO_SUCH_FILM);
@@ -126,12 +133,33 @@ public class FilmDaoImpl implements FilmDao {
         return Optional.of(jdbcTemplate.query(sql, ((rs, rowNum) -> makeFilm(rs))));
     }
 
+    private Map<Integer, List<Genre>> returnUpdatedGenresList(Film film) {
+        List<Genre> oldGenres = getFilmByID(film.getId()).get().getGenres();
+        List<Genre> newGenres = film.getGenres();
+        if (oldGenres != newGenres) {
+            if (newGenres == null) {
+                return Map.of(1, List.of());
+            }
+            newGenres = newGenres.stream().distinct().collect(Collectors.toList());
+            return Map.of(1, newGenres);
+        } else return Map.of(0, oldGenres);
+    }
+
+    private List<Genre> makeGenresList(int filmID) {
+        List<Integer> genresID = genreDao.getGenresOfFilm(filmID);
+        List<Genre> genresInstances = new ArrayList<>();
+        for (Integer i : genresID) {
+            genresInstances.add(genreDao.getGenre(i));
+        }
+        return genresInstances;
+    }
+
     @Override
     public Film makeFilm(ResultSet rs) throws SQLException {
         MPA mpa = mpaDao.getMpaByID(rs.getInt("MPA_RATING_ID"));
         List<Genre> genresList;
         try {
-            genresList = genreDao.getGenresOfFilm(rs.getInt("FILM_ID"));
+            genresList = makeGenresList(rs.getInt("FILM_ID"));
         } catch (Exception e) {
             genresList = List.of();
         }

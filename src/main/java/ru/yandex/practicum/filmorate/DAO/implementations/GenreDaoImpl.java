@@ -44,11 +44,9 @@ public class GenreDaoImpl implements GenreDao {
         }
     }
     @Override
-    public List<Genre> getGenresOfFilm(int filmID) {
-        String sql = "select * from GENRES as g " +
-                "left join GENRES_OF_FILMS as gof on gof.GENRE_ID=g.GENRE_ID " +
-                "where gof.FILM_ID = ?";
-        return jdbcTemplate.queryForList(sql, Genre.class, filmID);
+    public List<Integer> getGenresOfFilm(int filmID) {
+        String sql = "select GENRE_ID from GENRES_OF_FILMS where FILM_ID = ?";
+        return jdbcTemplate.queryForList(sql, Integer.class, filmID);
     }
     public List<Genre> getAllGenres() {
         String sql = "select * from GENRES";

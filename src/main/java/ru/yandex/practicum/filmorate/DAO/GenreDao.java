@@ -10,7 +10,7 @@ public interface GenreDao {
     List<Genre> getGenresByID(Integer ... genresID);
     Genre getGenre(int genreID);
     List<Genre> getAllGenres();
-    List<Genre> getGenresOfFilm(int filmID);
+    List<Integer> getGenresOfFilm(int filmID);
     void connectGenreAndFilm(Film film);
     void disconnectGenreAndFilm(Film film);
 }

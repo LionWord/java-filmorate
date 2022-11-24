@@ -15,7 +15,12 @@ public class Genre implements Serializable {
     private String name;
 
     public static Comparator<Genre> getComparator() {
-        return (g1, g2) -> g1.getId() - g2.getId();
+        return new Comparator<Genre>() {
+            @Override
+            public int compare(Genre g1, Genre g2) {
+                return g1.getId() - g2.getId();
+            }
+        };
     }
 
 }
