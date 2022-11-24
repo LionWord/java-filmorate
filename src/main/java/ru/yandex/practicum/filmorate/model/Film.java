@@ -18,7 +18,7 @@ public class Film {
     private String description;
     private Date releaseDate;
     private int duration;
-    private Map<String, Integer> mpa;
+    private MPA mpa;
     private int rate;
     private Map<String, Integer>[] genres;
 
