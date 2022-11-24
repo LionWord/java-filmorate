@@ -47,6 +47,9 @@ public class FilmController {
             throw new FailedValidationException(Messages.FAILED_FILM_VALIDATION);
         }
         filmService.addFilm(film);
+        if (!Optional.ofNullable(film.getGenres()).isEmpty()) {
+            filmService.setFilmGenres(film);
+        }
         return film;
     }
 

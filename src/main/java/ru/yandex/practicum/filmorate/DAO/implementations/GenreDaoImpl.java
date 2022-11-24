@@ -23,6 +23,7 @@ public class GenreDaoImpl implements GenreDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    @Override
     public List<Genre> getGenresByID(Integer ... genreID) {
         String sql = "select * from GENRES where GENRE_ID = ?";
         int[] types = new int[] {Types.INTEGER, Types.VARCHAR};
@@ -35,11 +36,17 @@ public class GenreDaoImpl implements GenreDao {
     @Override
     public Genre getGenre(int genreID) {
         String sql = "select * from GENRES where GENRE_ID = ?";
-        return jdbcTemplate.queryForObject(sql, Genre.class, genreID);
+        try {
+            return jdbcTemplate.queryForObject(sql, ((rs, rowNum) -> makeGenre(rs)), genreID);
+        } catch (Exception e) {
+            throw new NoSuchEntryException(Messages.INVALID_GENRE);
+        }
     }
     @Override
     public List<Genre> getGenresOfFilm(int filmID) {
-        String sql = "select GENRE_ID from GENRES_OF_FILMS where FILM_ID = ?";
+        String sql = "select * from GENRES as g " +
+                "left join GENRES_OF_FILMS as gof on gof.GENRE_ID=g.GENRE_ID " +
+                "where gof.FILM_ID = ?";
         return jdbcTemplate.queryForList(sql, Genre.class, filmID);
     }
     public List<Genre> getAllGenres() {

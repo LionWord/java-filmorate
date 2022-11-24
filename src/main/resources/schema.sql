@@ -123,4 +123,4 @@ ALTER COLUMN GENRE_ID
 RESTART WITH 1;
 
 insert into GENRES (GENRE_NAME)
-values ('COMEDY'),('ACTION'),('DRAMA'),('THRILLER'),('CARTOON'),('DOCUMENTARY');
+values ('Комедия'),('Драма'),('Мультфильм'),('Триллер'),('Документальный'),('Боевик');

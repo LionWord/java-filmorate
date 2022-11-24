@@ -17,6 +17,7 @@ import ru.yandex.practicum.filmorate.utils.Messages;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -62,7 +63,7 @@ public class FilmDaoImpl implements FilmDao {
                     film.getReleaseDate(),
                     film.getDuration(),
                     film.getDescription(),
-                    film.getMpa(),
+                    film.getMpa().getId(),
                     film.getId());
         } catch (Exception e) {
             return null;
@@ -95,12 +96,35 @@ public class FilmDaoImpl implements FilmDao {
        }
 
     }
+    @Override
+    public Film setFilmGenres(Film film) {
+            String genreSql = "insert into GENRES_OF_FILMS (FILM_ID, GENRE_ID) " +
+                    "values (?,?)";
+            List<Genre> genres = new ArrayList<>();
+            for (Genre g : film.getGenres()) {
+                jdbcTemplate.update(genreSql, film.getId(), g.getId());
+                g.setName(genreDao.getGenre(g.getId()).getName());
+                genres.add(g);
+            }
+            film.setGenres(genres);
+            return film;
+    }
 
-    //need to fix
+    @Override
+    public Optional<List<Film>> getAllFilms() {
+        String sql = "select * from FILMS";
+        return Optional.of(jdbcTemplate.query(sql, ((rs, rowNum) -> makeFilm(rs))));
+    }
+
     @Override
     public Film makeFilm(ResultSet rs) throws SQLException {
         MPA mpa = mpaDao.getMpaByID(rs.getInt("MPA_RATING_ID"));
-        List<Genre> genresList = genreDao.getGenresOfFilm(rs.getInt("FILM_ID"));
+        List<Genre> genresList;
+        try {
+            genresList = genreDao.getGenresOfFilm(rs.getInt("FILM_ID"));
+        } catch (Exception e) {
+            genresList = List.of();
+        }
         return Film.builder()
                 .name(rs.getString("FILM_NAME"))
                 .releaseDate(rs.getDate("RELEASE_DATE"))
@@ -112,10 +136,5 @@ public class FilmDaoImpl implements FilmDao {
                 .build();
     }
 
-    @Override
-    public Optional<List<Film>> getAllFilms() {
-        String sql = "select * from FILMS";
-        return Optional.of(jdbcTemplate.query(sql, ((rs, rowNum) -> makeFilm(rs))));
-    }
 
 }

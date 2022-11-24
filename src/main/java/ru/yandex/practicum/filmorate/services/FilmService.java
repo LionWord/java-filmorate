@@ -55,6 +55,10 @@ public class FilmService implements Likeable {
         return filmDao.getFilmByID(filmID);
     }
 
+    public Film setFilmGenres(Film film) {
+       return filmDao.setFilmGenres(film);
+    }
+
     @Override
     public void addLike(int filmID, int userID) {
         log.info("Starting method addLike");

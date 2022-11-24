@@ -16,7 +16,7 @@ public interface FilmDao {
     boolean removeFilmByID(int filmID);
 
     Optional<Film> getFilmByID(int filmID);
-
+    Film setFilmGenres(Film film);
     Film makeFilm(ResultSet rs) throws SQLException;
 
     Optional<List<Film>> getAllFilms();
