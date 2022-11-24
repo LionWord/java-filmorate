@@ -58,7 +58,7 @@ public class GenreDaoImpl implements GenreDao {
     public void connectGenreAndFilm(Film film) {
         String sql = "insert into GENRES_OF_FILMS (FILM_ID, GENRE_ID) values (?,?)";
         for (int i = 0; i < film.getGenres().size(); i++) {
-            jdbcTemplate.update(sql, film.getId(), film.getGenres());
+            jdbcTemplate.update(sql, film.getId(), film.getGenres().get(i).getId());
         }
     }
     @Override

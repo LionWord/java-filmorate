@@ -2,8 +2,11 @@ package ru.yandex.practicum.filmorate.model;
 
 import lombok.*;
 import org.springframework.boot.context.properties.bind.DefaultValue;
+import org.springframework.lang.Nullable;
 
+import java.io.Serializable;
 import java.sql.Date;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -12,7 +15,7 @@ import java.util.Map;
 @ToString
 @Builder (access = AccessLevel.PUBLIC)
 @EqualsAndHashCode
-public class Film {
+public class Film implements Serializable {
 
     private int id;
     private String name;
@@ -21,6 +24,7 @@ public class Film {
     private int duration;
     private MPA mpa;
     private int rate;
+    @Nullable
     private List<Genre> genres;
 
 }

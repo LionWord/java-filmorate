@@ -46,11 +46,7 @@ public class FilmController {
         if (!Validator.isValidFilm(film)) {
             throw new FailedValidationException(Messages.FAILED_FILM_VALIDATION);
         }
-        filmService.addFilm(film);
-        if (!Optional.ofNullable(film.getGenres()).isEmpty()) {
-            filmService.setFilmGenres(film);
-        }
-        return film;
+        return filmService.addFilm(film);
     }
 
     @PutMapping
@@ -60,8 +56,7 @@ public class FilmController {
         } else if (!filmService.filmIsPresent(film.getId())) {
             throw new NoSuchEntryException(Messages.NO_SUCH_FILM);
         }
-        filmService.modifyFilm(film);
-        return film;
+        return filmService.modifyFilm(film);
     }
 
     @PutMapping("{id}/like/{userId}")

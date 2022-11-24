@@ -36,7 +36,7 @@ public class FilmDaoImpl implements FilmDao {
 
     @Override
     public Film addFilm(Film film) {
-        String sql = "insert into FILMS (FILM_NAME, RELEASE_DATE, DURATION, DESCRIPTION, MPA_RATING_ID) values(?,?,?,?,?)";
+        String sql = "insert into FILMS (FILM_NAME, RELEASE_DATE, DURATION, DESCRIPTION, MPA_RATING_ID, RATE) values(?,?,?,?,?,?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
@@ -46,16 +46,21 @@ public class FilmDaoImpl implements FilmDao {
             ps.setInt(3, film.getDuration());
             ps.setString(4, film.getDescription());
             ps.setInt(5, film.getMpa().getId());
+            ps.setInt(6, film.getRate());
             return ps;
         }, keyHolder);
             film.setId(keyHolder.getKey().intValue());
+            if (film.getGenres() != null) {
+                genreDao.connectGenreAndFilm(film);
+                return setFilmGenres(film);
+            }
             return film;
         }
 
     @Override
     public Film updateFilm(Film film) {
         String sql = "update FILMS " +
-                "set FILM_NAME = ?, RELEASE_DATE = ?, DURATION = ?, DESCRIPTION = ?, MPA_RATING_ID = ? " +
+                "set FILM_NAME = ?, RELEASE_DATE = ?, DURATION = ?, DESCRIPTION = ?, MPA_RATING_ID = ?, RATE = ? " +
                 "where FILM_ID = ?";
         try {
             jdbcTemplate.update(sql,
@@ -64,9 +69,13 @@ public class FilmDaoImpl implements FilmDao {
                     film.getDuration(),
                     film.getDescription(),
                     film.getMpa().getId(),
+                    film.getRate(),
                     film.getId());
         } catch (Exception e) {
             return null;
+        }
+        if (film.getGenres() != null) {
+            return setFilmGenres(film);
         }
         return film;
     }
@@ -89,20 +98,21 @@ public class FilmDaoImpl implements FilmDao {
     public Optional<Film> getFilmByID(int filmID) {
         String sql = "select * from FILMS " +
                 "where FILM_ID = ?";
+        Film film;
        try {
-           return Optional.ofNullable(jdbcTemplate.queryForObject(sql, ((rs, rowNum) -> makeFilm(rs)), filmID));
+           film = Optional.ofNullable(jdbcTemplate.queryForObject(sql, ((rs, rowNum) -> makeFilm(rs)), filmID)).get();
+           if (film.getGenres() != null) {
+               film = setFilmGenres(film);
+           }
        } catch (Exception e) {
            throw new NoSuchEntryException(Messages.NO_SUCH_FILM);
        }
-
+        return Optional.of(film);
     }
     @Override
     public Film setFilmGenres(Film film) {
-            String genreSql = "insert into GENRES_OF_FILMS (FILM_ID, GENRE_ID) " +
-                    "values (?,?)";
             List<Genre> genres = new ArrayList<>();
             for (Genre g : film.getGenres()) {
-                jdbcTemplate.update(genreSql, film.getId(), g.getId());
                 g.setName(genreDao.getGenre(g.getId()).getName());
                 genres.add(g);
             }
@@ -133,6 +143,7 @@ public class FilmDaoImpl implements FilmDao {
                 .description(rs.getString("DESCRIPTION"))
                 .mpa(mpa)
                 .genres(genresList)
+                .rate(rs.getInt("RATE"))
                 .build();
     }
 

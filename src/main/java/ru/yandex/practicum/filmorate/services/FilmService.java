@@ -31,16 +31,16 @@ public class FilmService implements Likeable {
         this.likesDao = likesDao;
     }
 
-    public void addFilm(Film film) {
-        filmDao.addFilm(film);
+    public Film addFilm(Film film) {
+        return filmDao.addFilm(film);
     }
 
     public void deleteFilm(int filmID) {
         filmDao.removeFilmByID(filmID);
     }
 
-    public void modifyFilm(Film film) {
-        filmDao.updateFilm(film);
+    public Film modifyFilm(Film film) {
+        return filmDao.updateFilm(film);
     }
 
     public Optional<List<Film>> getAllFilms() {

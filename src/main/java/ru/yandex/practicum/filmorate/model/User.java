@@ -2,6 +2,7 @@ package ru.yandex.practicum.filmorate.model;
 
 import lombok.*;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
 
@@ -11,7 +12,7 @@ import java.time.LocalDate;
 @Builder(access = AccessLevel.PUBLIC)
 @EqualsAndHashCode
 
-public class User {
+public class User implements Serializable {
 
     private int id;
     private String email;
