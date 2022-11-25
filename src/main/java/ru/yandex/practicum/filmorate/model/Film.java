@@ -10,7 +10,7 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
-@Builder (access = AccessLevel.PUBLIC)
+@Builder(access = AccessLevel.PUBLIC)
 @EqualsAndHashCode
 public class Film implements Serializable {
 

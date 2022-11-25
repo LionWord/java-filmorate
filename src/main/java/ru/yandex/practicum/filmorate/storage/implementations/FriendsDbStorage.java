@@ -22,7 +22,7 @@ public class FriendsDbStorage implements FriendsStorage {
 
     @Override
     public void addFriendshipRequest(int senderID, int recipientID) {
-        friendshipDao.sendFriendshipRequest(senderID,recipientID);
+        friendshipDao.sendFriendshipRequest(senderID, recipientID);
     }
 
     @Override

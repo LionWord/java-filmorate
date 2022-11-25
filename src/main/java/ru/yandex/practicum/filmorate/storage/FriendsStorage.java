@@ -16,6 +16,6 @@ public interface FriendsStorage {
 
     Optional<List<User>> getAllFriends(int userID);
 
-    Optional <List<User>> getCommonFriends(int firstUserID, int secondUserID);
+    Optional<List<User>> getCommonFriends(int firstUserID, int secondUserID);
 
 }

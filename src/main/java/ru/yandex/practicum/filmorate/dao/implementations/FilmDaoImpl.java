@@ -18,7 +18,10 @@ import ru.yandex.practicum.filmorate.utils.Messages;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Component
@@ -35,7 +38,7 @@ public class FilmDaoImpl implements FilmDao {
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(sql, new String[] { "FILM_ID" });
+            PreparedStatement ps = connection.prepareStatement(sql, new String[]{"FILM_ID"});
             ps.setString(1, film.getName());
             ps.setDate(2, film.getReleaseDate());
             ps.setInt(3, film.getDuration());
@@ -44,13 +47,13 @@ public class FilmDaoImpl implements FilmDao {
             ps.setInt(6, film.getRate());
             return ps;
         }, keyHolder);
-            film.setId(keyHolder.getKey().intValue());
-            if (film.getGenres() != null) {
-                genreDao.connectGenreAndFilm(film);
-                return setFilmGenres(film);
-            }
-            return film;
+        film.setId(keyHolder.getKey().intValue());
+        if (film.getGenres() != null) {
+            genreDao.connectGenreAndFilm(film);
+            return setFilmGenres(film);
         }
+        return film;
+    }
 
     @Override
     public Film updateFilm(Film film) {
@@ -81,6 +84,7 @@ public class FilmDaoImpl implements FilmDao {
 
         return film;
     }
+
     @Override
     public boolean removeFilmByID(int filmID) {
         if (getFilmByID(filmID) == null) {
@@ -100,25 +104,26 @@ public class FilmDaoImpl implements FilmDao {
         String sql = "select * from FILMS " +
                 "where FILM_ID = ?";
         Film film;
-       try {
-           film = jdbcTemplate.queryForObject(sql, ((rs, rowNum) -> makeFilm(rs)), filmID);
-           if (genreDao.getGenresOfFilm(filmID) != null) {
-               film.setGenres(makeGenresList(filmID));
-           }
-       } catch (Exception e) {
-           throw new NoSuchEntryException(Messages.NO_SUCH_FILM);
-       }
+        try {
+            film = jdbcTemplate.queryForObject(sql, ((rs, rowNum) -> makeFilm(rs)), filmID);
+            if (genreDao.getGenresOfFilm(filmID) != null) {
+                film.setGenres(makeGenresList(filmID));
+            }
+        } catch (Exception e) {
+            throw new NoSuchEntryException(Messages.NO_SUCH_FILM);
+        }
         return film;
     }
+
     @Override
     public Film setFilmGenres(Film film) {
-            List<Genre> genres = new ArrayList<>();
-            for (Genre g : film.getGenres()) {
-                g.setName(genreDao.getGenre(g.getId()).getName());
-                genres.add(g);
-            }
-            film.setGenres(genres);
-            return film;
+        List<Genre> genres = new ArrayList<>();
+        for (Genre g : film.getGenres()) {
+            g.setName(genreDao.getGenre(g.getId()).getName());
+            genres.add(g);
+        }
+        film.setGenres(genres);
+        return film;
     }
 
     @Override
@@ -138,10 +143,7 @@ public class FilmDaoImpl implements FilmDao {
             return Map.of(1, newGenres);
         }
 
-        if (oldGenres == null) {
-            return Map.of(0, List.of());
-        }
-        return Map.of(0, oldGenres);
+        return Map.of(0, Objects.requireNonNullElseGet(oldGenres, List::of));
     }
 
     private List<Genre> makeGenresList(int filmID) {

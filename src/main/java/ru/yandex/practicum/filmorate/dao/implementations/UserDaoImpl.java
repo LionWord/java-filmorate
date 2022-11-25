@@ -33,7 +33,7 @@ public class UserDaoImpl implements UserDao {
         } catch (Exception e) {
             return null;
         }
-        user.setId(jdbcTemplate.query(returnSql,(rs, rowNum) -> makeUser(rs), user.getEmail()).get(0).getId());
+        user.setId(jdbcTemplate.query(returnSql, (rs, rowNum) -> makeUser(rs), user.getEmail()).get(0).getId());
         return user;
     }
 
@@ -76,8 +76,9 @@ public class UserDaoImpl implements UserDao {
     @Override
     public List<User> getAllUsers() {
         String sql = "select * from USER_INFO";
-        return jdbcTemplate.query(sql,(rs, rowNum) -> makeUser(rs));
+        return jdbcTemplate.query(sql, (rs, rowNum) -> makeUser(rs));
     }
+
     @Override
     public User makeUser(ResultSet rs) throws SQLException {
         return User.builder()
@@ -92,7 +93,7 @@ public class UserDaoImpl implements UserDao {
     private boolean checkIfEmailIsInDatabase(String email) {
         String sql = "select * from USER_INFO where EMAIL = ?";
         try {
-            return jdbcTemplate.query(sql,(rs, rowNum) -> makeUser(rs), email).equals(null);
+            return jdbcTemplate.query(sql, (rs, rowNum) -> makeUser(rs), email).equals(null);
         } catch (Exception e) {
             return false;
         }

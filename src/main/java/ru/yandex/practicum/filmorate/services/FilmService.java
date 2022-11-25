@@ -49,23 +49,27 @@ public class FilmService implements Likeable {
         return !filmDao.getFilmByID(filmID).equals(null);
     }
 
-    public Optional<Film> getFilm(int filmID){
+    public Optional<Film> getFilm(int filmID) {
         return Optional.of(filmDao.getFilmByID(filmID));
     }
+
     @Override
     public void addLike(int filmID, int userID) {
         likesDao.userLikeFilm(userID, filmID);
     }
+
     @Override
     public void removeLike(int filmID, int userID) {
         likesDao.userRemoveLike(userID, filmID);
     }
+
     @Override
     public List<Film> getMostPopularFilms(int topFilmsAmount) {
         return likesDao.getMostPopularFilms(topFilmsAmount);
     }
-     @Override
-     public void checkFilmAndUserPresence(int filmID, int userID) {
+
+    @Override
+    public void checkFilmAndUserPresence(int filmID, int userID) {
         if (filmDao.getFilmByID(filmID) == null) {
             throw new NoSuchEntryException(Messages.NO_SUCH_FILM);
         } else if (userDao.getUserById(userID) == null) {

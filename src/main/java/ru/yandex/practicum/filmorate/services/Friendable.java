@@ -7,8 +7,11 @@ import java.util.Optional;
 
 public interface Friendable {
     void addFriend(int userID, int friendID);
+
     void removeFriend(int userID, int friendID);
+
     Optional<List<User>> getAllFriendsList(int userID);
+
     Optional<List<User>> getCommonFriends(int userOneID, int userTwoID);
 
 }

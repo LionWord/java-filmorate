@@ -15,7 +15,7 @@ public class Genre implements Serializable {
     private String name;
 
     public static Comparator<Genre> getComparator() {
-        return (g1, g2) -> g1.getId() - g2.getId();
+        return Comparator.comparingInt(Genre::getId);
     }
 
 }

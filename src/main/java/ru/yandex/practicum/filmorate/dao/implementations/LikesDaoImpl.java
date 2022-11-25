@@ -10,7 +10,6 @@ import ru.yandex.practicum.filmorate.model.Film;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
@@ -42,6 +41,7 @@ public class LikesDaoImpl implements LikesDao {
         }
         return true;
     }
+
     @Override
     public List<Film> getMostPopularFilms(int limit) {
         String sql = "select * from FILMS order by RATE desc limit ?";
