@@ -1,9 +1,9 @@
-package ru.yandex.practicum.filmorate.DAO.implementations;
+package ru.yandex.practicum.filmorate.dao.implementations;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.filmorate.DAO.MpaDao;
+import ru.yandex.practicum.filmorate.dao.MpaDao;
 import ru.yandex.practicum.filmorate.exceptions.NoSuchEntryException;
 import ru.yandex.practicum.filmorate.model.MPA;
 import ru.yandex.practicum.filmorate.utils.Messages;
@@ -11,7 +11,6 @@ import ru.yandex.practicum.filmorate.utils.Messages;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Map;
 
 @Component
 public class MpaDaoImpl implements MpaDao {

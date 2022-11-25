@@ -2,7 +2,7 @@ package ru.yandex.practicum.filmorate.storage.implementations;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import ru.yandex.practicum.filmorate.DAO.FriendshipDao;
+import ru.yandex.practicum.filmorate.dao.FriendshipDao;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.FriendsStorage;
 

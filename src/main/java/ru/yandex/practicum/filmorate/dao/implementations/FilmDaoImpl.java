@@ -1,13 +1,13 @@
-package ru.yandex.practicum.filmorate.DAO.implementations;
+package ru.yandex.practicum.filmorate.dao.implementations;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.filmorate.DAO.FilmDao;
-import ru.yandex.practicum.filmorate.DAO.GenreDao;
-import ru.yandex.practicum.filmorate.DAO.MpaDao;
+import ru.yandex.practicum.filmorate.dao.FilmDao;
+import ru.yandex.practicum.filmorate.dao.GenreDao;
+import ru.yandex.practicum.filmorate.dao.MpaDao;
 import ru.yandex.practicum.filmorate.exceptions.NoSuchEntryException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
@@ -85,10 +85,9 @@ public class FilmDaoImpl implements FilmDao {
 
         return film;
     }
-
     @Override
     public boolean removeFilmByID(int filmID) {
-        if (getFilmByID(filmID).isEmpty()) {
+        if (getFilmByID(filmID) == null) {
             throw new NoSuchEntryException(Messages.NO_SUCH_FILM);
         }
         String sql = "delete from FILMS where FILM_ID = ?";
@@ -101,20 +100,19 @@ public class FilmDaoImpl implements FilmDao {
     }
 
     @Override
-    public Optional<Film> getFilmByID(int filmID) {
+    public Film getFilmByID(int filmID) {
         String sql = "select * from FILMS " +
                 "where FILM_ID = ?";
         Film film;
        try {
-           film = Optional.ofNullable(jdbcTemplate.queryForObject(sql, ((rs, rowNum) -> makeFilm(rs)), filmID)).get();
+           film = jdbcTemplate.queryForObject(sql, ((rs, rowNum) -> makeFilm(rs)), filmID);
            if (genreDao.getGenresOfFilm(filmID) != null) {
-
                film.setGenres(makeGenresList(filmID));
            }
        } catch (Exception e) {
            throw new NoSuchEntryException(Messages.NO_SUCH_FILM);
        }
-        return Optional.of(film);
+        return film;
     }
     @Override
     public Film setFilmGenres(Film film) {
@@ -128,13 +126,13 @@ public class FilmDaoImpl implements FilmDao {
     }
 
     @Override
-    public Optional<List<Film>> getAllFilms() {
+    public List<Film> getAllFilms() {
         String sql = "select * from FILMS";
-        return Optional.of(jdbcTemplate.query(sql, ((rs, rowNum) -> makeFilm(rs))));
+        return jdbcTemplate.query(sql, ((rs, rowNum) -> makeFilm(rs)));
     }
 
     private Map<Integer, List<Genre>> returnUpdatedGenresList(Film film) {
-        List<Genre> oldGenres = getFilmByID(film.getId()).get().getGenres();
+        List<Genre> oldGenres = getFilmByID(film.getId()).getGenres();
         List<Genre> newGenres = film.getGenres();
         if (oldGenres != newGenres) {
             if (newGenres == null) {
@@ -142,7 +140,12 @@ public class FilmDaoImpl implements FilmDao {
             }
             newGenres = newGenres.stream().distinct().collect(Collectors.toList());
             return Map.of(1, newGenres);
-        } else return Map.of(0, oldGenres);
+        }
+
+        if (oldGenres == null) {
+            return Map.of(0, List.of());
+        }
+        return Map.of(0, oldGenres);
     }
 
     private List<Genre> makeGenresList(int filmID) {

@@ -1,16 +1,15 @@
 package ru.yandex.practicum.filmorate.utils;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.sql.Date;
 import java.time.LocalDate;
 
-
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class Validator {
-    private Validator() {
-
-    }
 
     public static boolean isValidFilm(Film film) {
         return !film.getName().isEmpty()

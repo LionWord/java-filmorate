@@ -1,11 +1,10 @@
-package ru.yandex.practicum.filmorate.DAO;
+package ru.yandex.practicum.filmorate.dao;
 
 import ru.yandex.practicum.filmorate.model.Film;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Optional;
 
 public interface FilmDao {
 
@@ -15,10 +14,9 @@ public interface FilmDao {
 
     boolean removeFilmByID(int filmID);
 
-    Optional<Film> getFilmByID(int filmID);
+    Film getFilmByID(int filmID);
     Film setFilmGenres(Film film);
     Film makeFilm(ResultSet rs) throws SQLException;
-
-    Optional<List<Film>> getAllFilms();
+    List<Film> getAllFilms();
 
 }

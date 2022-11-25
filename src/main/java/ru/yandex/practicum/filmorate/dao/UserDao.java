@@ -1,11 +1,10 @@
-package ru.yandex.practicum.filmorate.DAO;
+package ru.yandex.practicum.filmorate.dao;
 
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Optional;
 
 public interface UserDao {
 
@@ -15,7 +14,7 @@ public interface UserDao {
 
     boolean removeUserById(int userID);
 
-    Optional<User> getUserById(int userID);
+    User getUserById(int userID);
 
     List<User> getAllUsers();
 

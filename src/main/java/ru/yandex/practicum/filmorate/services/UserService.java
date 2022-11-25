@@ -10,10 +10,7 @@ import ru.yandex.practicum.filmorate.storage.implementations.UserDbStorage;
 
 import java.util.*;
 
-import static org.springframework.util.ObjectUtils.isEmpty;
-
 @Service
-@Slf4j
 public class UserService implements Friendable {
 
     private final UserStorage storage;
@@ -48,25 +45,18 @@ public class UserService implements Friendable {
 
     @Override
     public void addFriend(int userID, int friendID) {
-        log.debug("Starting method addFriend");
         friendsStorage.addFriends(userID, friendID);
-        log.debug("Finished method addFriend");
     }
     @Override
     public void removeFriend(int userID, int friendID) {
-        log.debug("Starting method removeFriend");
         friendsStorage.removeFriends(userID, friendID);
-        log.info(userID + " and " + friendID + "are not friends");
-        log.debug("Finished method removeFriend");
     }
     @Override
     public Optional<List<User>> getAllFriendsList(int userID) {
-        log.debug("Starting method getAllFriendsList");
         return friendsStorage.getAllFriends(userID);
     }
     @Override
     public Optional<List<User>> getCommonFriends(int userOneID, int userTwoID) {
-        log.debug("Starting method getCommonFriends");
         return friendsStorage.getCommonFriends(userOneID, userTwoID);
     }
 

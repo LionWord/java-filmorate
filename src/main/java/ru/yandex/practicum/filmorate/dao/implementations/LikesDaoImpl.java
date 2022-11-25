@@ -1,10 +1,10 @@
-package ru.yandex.practicum.filmorate.DAO.implementations;
+package ru.yandex.practicum.filmorate.dao.implementations;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.filmorate.DAO.FilmDao;
-import ru.yandex.practicum.filmorate.DAO.LikesDao;
+import ru.yandex.practicum.filmorate.dao.FilmDao;
+import ru.yandex.practicum.filmorate.dao.LikesDao;
 import ru.yandex.practicum.filmorate.model.Film;
 
 import java.util.List;

@@ -13,10 +13,8 @@ import ru.yandex.practicum.filmorate.utils.Messages;
 import ru.yandex.practicum.filmorate.utils.Validator;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
-@Slf4j
 @RequestMapping("/films")
 public class FilmController {
     private final FilmService filmService;
@@ -29,16 +27,16 @@ public class FilmController {
     }
 
     @GetMapping
-    public Optional<List<Film>> getAllFilms() {
+    public List<Film> getAllFilms() {
         return filmService.getAllFilms();
     }
 
     @GetMapping({"{id}"})
-    public Optional<Film> getFilm(@PathVariable(value = "id") int filmID) {
+    public Film getFilm(@PathVariable(value = "id") int filmID) {
         if (!filmService.filmIsPresent(filmID)) {
             throw new NoSuchEntryException(Messages.NO_SUCH_FILM);
         }
-        return filmService.getFilm(filmID);
+        return filmService.getFilm(filmID).get();
     }
 
     @PostMapping

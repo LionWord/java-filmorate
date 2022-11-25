@@ -1,21 +1,18 @@
-package ru.yandex.practicum.filmorate.DAO.implementations;
+package ru.yandex.practicum.filmorate.dao.implementations;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.filmorate.DAO.UserDao;
+import ru.yandex.practicum.filmorate.dao.UserDao;
 import ru.yandex.practicum.filmorate.exceptions.AlreadyExistsException;
-import ru.yandex.practicum.filmorate.exceptions.InvalidInputException;
 import ru.yandex.practicum.filmorate.exceptions.NoSuchEntryException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.utils.Messages;
-import ru.yandex.practicum.filmorate.utils.SortingDirection;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Optional;
 
 @Component
 public class UserDaoImpl implements UserDao {
@@ -56,7 +53,7 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public boolean removeUserById(int userID) {
-        if (getUserById(userID).isEmpty()) {
+        if (getUserById(userID) == null) {
             throw new NoSuchEntryException(Messages.NO_SUCH_USER);
         }
         String sql = "delete from USER_INFO where ID = ?";
@@ -69,10 +66,10 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public Optional<User> getUserById(int userID) throws EmptyResultDataAccessException {
+    public User getUserById(int userID) throws EmptyResultDataAccessException {
         String sql = "select * from USER_INFO where ID = ?";
         try {
-            return Optional.of(jdbcTemplate.queryForObject(sql, (rs, rowNum) -> makeUser(rs), userID));
+            return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> makeUser(rs), userID);
         } catch (EmptyResultDataAccessException e) {
             return null;
         }

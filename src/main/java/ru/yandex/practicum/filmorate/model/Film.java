@@ -1,14 +1,11 @@
 package ru.yandex.practicum.filmorate.model;
 
 import lombok.*;
-import org.springframework.boot.context.properties.bind.DefaultValue;
 import org.springframework.lang.Nullable;
 
 import java.io.Serializable;
 import java.sql.Date;
-import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 
 @Getter
 @Setter
