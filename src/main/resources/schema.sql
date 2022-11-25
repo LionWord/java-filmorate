@@ -87,38 +87,3 @@ create table IF NOT EXISTS USERS_LIKED_FILM
         foreign key (USER_ID) references USER_INFO (ID)
 );
 
-delete
-from FRIENDS;
-
-delete
-from FRIENDSHIP_REQUESTS;
-
-delete
-from GENRES_OF_FILMS;
-
-delete
-from GENRES;
-
-delete
-from USERS_LIKED_FILM;
-
-delete
-from FILMS;
-
-delete
-from MPA_RATING;
-
-delete
-from USER_INFO;
-
-ALTER TABLE USER_INFO
-    ALTER COLUMN ID
-        RESTART WITH 1;
-
-ALTER TABLE FILMS
-    ALTER COLUMN FILM_ID
-        RESTART WITH 1;
-
-ALTER TABLE GENRES
-    ALTER COLUMN GENRE_ID
-        RESTART WITH 1;
