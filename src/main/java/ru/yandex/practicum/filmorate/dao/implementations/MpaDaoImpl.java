@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.dao.implementations;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
@@ -13,14 +14,10 @@ import java.sql.SQLException;
 import java.util.List;
 
 @Component
+@RequiredArgsConstructor(onConstructor_ = @Autowired)
 public class MpaDaoImpl implements MpaDao {
 
     private final JdbcTemplate jdbcTemplate;
-
-    @Autowired
-    public MpaDaoImpl(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
 
     public MPA getMpaByID(int mpaID) {
         String sql = "select * from MPA_RATING where MPA_ID = ?";

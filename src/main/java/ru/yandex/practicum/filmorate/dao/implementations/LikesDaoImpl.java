@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.dao.implementations;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
@@ -12,16 +13,11 @@ import java.util.Map;
 import java.util.Optional;
 
 @Component
+@RequiredArgsConstructor(onConstructor_ = @Autowired)
 public class LikesDaoImpl implements LikesDao {
 
     private final JdbcTemplate jdbcTemplate;
     private final FilmDao filmDao;
-
-    @Autowired
-    public LikesDaoImpl(JdbcTemplate jdbcTemplate, FilmDao filmDao) {
-        this.jdbcTemplate = jdbcTemplate;
-        this.filmDao = filmDao;
-    }
 
     @Override
     public Map<Integer, Integer> userLikeFilm(int userID, int filmID) {
@@ -46,13 +42,6 @@ public class LikesDaoImpl implements LikesDao {
         }
         return true;
     }
-
-    @Override
-    public Optional<List<Integer>> allUsersLikedSpecificFilm(int filmID) {
-        String sql = "select USER_ID from USERS_LIKED_FILM where FILM_ID = ?";
-        return Optional.of(jdbcTemplate.queryForList(sql, Integer.class, filmID));
-    }
-
     @Override
     public List<Film> getMostPopularFilms(int limit) {
         String sql = "select * from FILMS order by RATE desc limit ?";

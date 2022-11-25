@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.dao.implementations;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
@@ -12,16 +13,11 @@ import java.util.Map;
 import java.util.Optional;
 
 @Component
+@RequiredArgsConstructor(onConstructor_ = @Autowired)
 public class FriendshipDaoImpl implements FriendshipDao {
 
     final JdbcTemplate jdbcTemplate;
     final UserDao userDao;
-
-    @Autowired
-    public FriendshipDaoImpl(JdbcTemplate jdbcTemplate, UserDao userDao) {
-        this.jdbcTemplate = jdbcTemplate;
-        this.userDao = userDao;
-    }
 
     @Override
     public boolean sendFriendshipRequest(int senderID, int recipientID) {

@@ -10,6 +10,5 @@ public interface LikesDao {
 
     Map<Integer, Integer> userLikeFilm(int userID, int filmID);
     boolean userRemoveLike(int userID, int filmID);
-    Optional<List<Integer>> allUsersLikedSpecificFilm(int filmID);
     List<Film> getMostPopularFilms(int limit);
 }
