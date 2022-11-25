@@ -21,7 +21,11 @@ create table IF NOT EXISTS FILMS
     DURATION      INTEGER,
     DESCRIPTION   CHARACTER VARYING(200),
     MPA_RATING_ID INTEGER,
-    RATE          INTEGER DEFAULT 0
+    RATE          INTEGER DEFAULT 0,
+        constraint "MPA FK"
+        foreign key (MPA_RATING_ID) references MPA_RATING
+        on update cascade
+        on delete cascade
 );
 
 create table IF NOT EXISTS GENRES_OF_FILMS

@@ -2,10 +2,12 @@ package ru.yandex.practicum.filmorate;
 
 import lombok.RequiredArgsConstructor;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.jdbc.core.JdbcTemplate;
 import ru.yandex.practicum.filmorate.controllers.FilmController;
 import ru.yandex.practicum.filmorate.controllers.GenresController;
 import ru.yandex.practicum.filmorate.controllers.MpaController;
@@ -28,6 +30,50 @@ public class FilmorateApplicationTests {
     private final FilmController filmController;
     private final MpaController mpaController;
     private final GenresController genresController;
+    private final JdbcTemplate jdbcTemplate;
+
+    @BeforeEach
+    public void prepareDatabaseForTests() {
+        String sql = "delete " +
+                "from FRIENDS; " +
+                " " +
+                "delete " +
+                "from FRIENDSHIP_REQUESTS; " +
+                " " +
+                "delete " +
+                "from GENRES_OF_FILMS; " +
+                " " +
+                "delete " +
+                "from USERS_LIKED_FILM; " +
+                " " +
+                "delete " +
+                "from FILMS; " +
+                " " +
+                "delete " +
+                "from USER_INFO; " +
+                " " +
+                "ALTER TABLE USER_INFO " +
+                "    ALTER COLUMN ID " +
+                "        RESTART WITH 1; " +
+                " " +
+                "ALTER TABLE FILMS " +
+                "    ALTER COLUMN FILM_ID " +
+                "        RESTART WITH 1; " +
+                " " +
+                "ALTER TABLE GENRES " +
+                "    ALTER COLUMN GENRE_ID " +
+                "        RESTART WITH 1;" +
+                "insert into USER_INFO (EMAIL, LOGIN, USER_NAME, BIRTHDAY) " +
+                "values ('mail@yandex.ru', 'dolore', 'est adipisicing', '1976-09-20'), " +
+                "       ('fail@ya.ru', 'olotor', 'disgustin', '1973-01-01'), " +
+                "       ('trail@rambler.ru', 'jack', 'olddad', '1951-02-02'); " +
+                " " +
+                "insert into FILMS (FILM_NAME, RELEASE_DATE, DURATION, DESCRIPTION, MPA_RATING_ID) " +
+                "values ('New film', '1999-04-30', 120, 'New film about friends', 3), " +
+                "       ('Opop', '1998-04-30', 150, 'On opop', 2), " +
+                "       ('Coco', '1997-04-30', 110, 'On coco', 1);";
+        jdbcTemplate.execute(sql);
+    }
 
     @Test
     public void testFindUserById() {
