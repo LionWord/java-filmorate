@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.services;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.dao.FilmDao;
@@ -16,18 +17,12 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor(onConstructor_ = @Autowired)
 public class FilmService implements Likeable {
 
     private final FilmDao filmDao;
     private final UserDao userDao;
     private final LikesDao likesDao;
-
-    @Autowired
-    public FilmService(FilmDaoImpl filmDao, UserDaoImpl userDao, LikesDaoImpl likesDao) {
-        this.filmDao = filmDao;
-        this.userDao = userDao;
-        this.likesDao = likesDao;
-    }
 
     public Film addFilm(Film film) {
         return filmDao.addFilm(film);
