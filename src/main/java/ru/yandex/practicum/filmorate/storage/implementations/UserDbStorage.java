@@ -30,8 +30,8 @@ public class UserDbStorage implements UserStorage {
     }
 
     @Override
-    public void modifyUser(User user) {
-        userDao.updateUser(user);
+    public User modifyUser(User user) {
+        return userDao.updateUser(user);
     }
 
     @Override

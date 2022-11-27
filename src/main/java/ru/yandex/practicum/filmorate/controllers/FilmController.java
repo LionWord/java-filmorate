@@ -55,10 +55,10 @@ public class FilmController {
     @PutMapping("{id}/like/{userId}")
     public void likeFilm(@PathVariable(value = "id") int filmID,
                          @PathVariable(value = "userId") int userID) {
-        if (filmService.filmIsPresent(filmID) & userService.userIsPresent(userID)) {
-            filmService.addLike(filmID, userID);
-        } else {
+        if (!filmService.filmIsPresent(filmID) & !userService.userIsPresent(userID)) {
             throw new NoSuchEntryException(Messages.TRY_ANOTHER_ID);
+        } else {
+            filmService.addLike(filmID, userID);
         }
     }
 

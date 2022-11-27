@@ -51,8 +51,7 @@ public class UserController {
         } else if (!service.userIsPresent(user.getId())) {
             throw new NoSuchEntryException(Messages.NO_SUCH_USER);
         }
-        service.modifyUser(user);
-        return user;
+        return service.modifyUser(user);
     }
 
     @PutMapping("{id}/friends/{friendId}")

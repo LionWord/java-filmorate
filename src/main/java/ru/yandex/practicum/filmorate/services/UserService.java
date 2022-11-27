@@ -33,8 +33,8 @@ public class UserService implements Friendable {
         storage.deleteUser(userID);
     }
 
-    public void modifyUser(User user) {
-        storage.modifyUser(user);
+    public User modifyUser(User user) {
+        return storage.modifyUser(user);
     }
 
     public List<User> getAllUsers() {
