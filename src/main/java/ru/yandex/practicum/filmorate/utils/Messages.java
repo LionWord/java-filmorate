@@ -1,5 +1,9 @@
 package ru.yandex.practicum.filmorate.utils;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class Messages {
 
     public static final String FAILED_USER_VALIDATION = "Failed user validation. Check your input and try again.\n" +
@@ -24,8 +28,9 @@ public class Messages {
     public static final String ALREADY_FRIENDS = "Users are already friends";
     public static final String NOT_FRIENDS = "Users are not friends";
     public static final String TOO_BIG_VALUE = "Value is too big";
-
-    private Messages() {
-    }
+    public static final String INVALID_INPUT = "Invalid input";
+    public static final String INVALID_MPA = "Invalid MPA ID";
+    public static final String INVALID_GENRE = "Invalid genre ID";
+    public static final String TRY_ANOTHER_ID = "Try another filmID or userID";
 
 }

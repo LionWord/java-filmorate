@@ -1,76 +1,72 @@
 package ru.yandex.practicum.filmorate.services;
 
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
+import ru.yandex.practicum.filmorate.storage.FriendsStorage;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
+import ru.yandex.practicum.filmorate.storage.implementations.UserDbStorage;
 
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+import java.util.Optional;
 
 @Service
-@Slf4j
 public class UserService implements Friendable {
 
     private final UserStorage storage;
+    private final FriendsStorage friendsStorage;
 
     @Autowired
-    public UserService(InMemoryUserStorage storage) {
+    public UserService(UserDbStorage storage, FriendsStorage friendsStorage) {
         this.storage = storage;
+        this.friendsStorage = friendsStorage;
     }
+
+    public void addUser(User user) {
+        if (user.getName().isEmpty()) {
+            user.setName(user.getLogin());
+        }
+        storage.addUser(user);
+    }
+
+    public void deleteUser(int userID) {
+        storage.deleteUser(userID);
+    }
+
+    public User modifyUser(User user) {
+        return storage.modifyUser(user);
+    }
+
+    public List<User> getAllUsers() {
+        return storage.getAllUsers();
+    }
+
+    public boolean userIsPresent(int userID) {
+        return storage.userIsPresent(userID);
+    }
+
+    public User getUser(int userID) {
+        return storage.getUser(userID);
+    }
+
     @Override
     public void addFriend(int userID, int friendID) {
-        log.debug("Starting method addFriend");
-        User userOne = storage.getUser(userID);
-        userOne.addFriend(friendID);
-        storage.modifyUser(userOne);
-        User userTwo = storage.getUser(friendID);
-        userTwo.addFriend(userID);
-        storage.modifyUser(userTwo);
-        log.info(storage.getUser(userID) + " and " + storage.getUser(friendID) + " now friends");
-        log.debug("Finished method addFriend");
+        friendsStorage.addFriends(userID, friendID);
     }
+
     @Override
     public void removeFriend(int userID, int friendID) {
-        log.debug("Starting method removeFriend");
-        storage.getDatabase().get(userID).removeFriend(friendID);
-        storage.getDatabase().get(friendID).removeFriend(userID);
-        log.info(storage.getUser(userID) + " and " + storage.getUser(friendID) + "are not friends");
-        log.debug("Finished method removeFriend");
+        friendsStorage.removeFriends(userID, friendID);
     }
+
     @Override
-    public List<User> getAllFriendsList(int userID) {
-        log.debug("Starting method getAllFriendsList");
-        if (storage.getUser(userID).getFriendsID().isEmpty()) {
-            log.info("User does not have friends. Returning empty ArrayList");
-            return new ArrayList<>();
-        }
-        List<User> friends = new ArrayList<>();
-        for (int i : storage.getUser(userID).getFriendsID()) {
-            friends.add(storage.getUser(i));
-        }
-        log.info("Finished method getAllFriendsList");
-        return friends;
+    public Optional<List<User>> getAllFriendsList(int userID) {
+        return friendsStorage.getAllFriends(userID);
     }
+
     @Override
-    public Set<User> getCommonFriends(int userOneID, int userTwoID) {
-        log.debug("Starting method getCommonFriends");
-        Set<Integer> firstUserFriends = storage.getUser(userOneID).getFriendsID();
-        Set<Integer> secondUserFriends = storage.getUser(userTwoID).getFriendsID();
-        if (firstUserFriends.isEmpty() || secondUserFriends.isEmpty()) {
-            return new HashSet<>();
-        }
-        Set<User> result = new HashSet<>();
-        for (int i : firstUserFriends) {
-            if (secondUserFriends.contains(i)) {
-                result.add(storage.getUser(i));
-            }
-        }
-        return result;
+    public Optional<List<User>> getCommonFriends(int userOneID, int userTwoID) {
+        return friendsStorage.getCommonFriends(userOneID, userTwoID);
     }
 
 }

@@ -1,87 +1,82 @@
 package ru.yandex.practicum.filmorate.controllers;
 
-import lombok.extern.slf4j.Slf4j;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.exceptions.AlreadyExistsException;
 import ru.yandex.practicum.filmorate.exceptions.FailedValidationException;
 import ru.yandex.practicum.filmorate.exceptions.InvalidInputException;
 import ru.yandex.practicum.filmorate.exceptions.NoSuchEntryException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.services.FilmService;
-import ru.yandex.practicum.filmorate.services.Rateable;
-import ru.yandex.practicum.filmorate.storage.FilmStorage;
-import ru.yandex.practicum.filmorate.storage.InMemoryFilmStorage;
+import ru.yandex.practicum.filmorate.services.UserService;
 import ru.yandex.practicum.filmorate.utils.Messages;
 import ru.yandex.practicum.filmorate.utils.Validator;
 
 import java.util.List;
 
 @RestController
-@Slf4j
+@RequiredArgsConstructor(onConstructor_ = @Autowired)
 @RequestMapping("/films")
 public class FilmController {
-
-    private final FilmStorage filmStorage;
-    private final Rateable filmService;
-
-    @Autowired
-    public FilmController(InMemoryFilmStorage filmStorage, FilmService filmService) {
-        this.filmStorage = filmStorage;
-        this.filmService = filmService;
-    }
+    private final FilmService filmService;
+    private final UserService userService;
 
     @GetMapping
     public List<Film> getAllFilms() {
-        return filmStorage.getAllFilms();
+        return filmService.getAllFilms();
     }
 
     @GetMapping({"{id}"})
     public Film getFilm(@PathVariable(value = "id") int filmID) {
-        if (!filmStorage.getDatabase().containsKey(filmID)) {
+        if (!filmService.filmIsPresent(filmID)) {
             throw new NoSuchEntryException(Messages.NO_SUCH_FILM);
         }
-        return filmStorage.getFilm(filmID);
+        return filmService.getFilm(filmID).get();
     }
 
     @PostMapping
     public Film addFilm(@RequestBody Film film) {
         if (!Validator.isValidFilm(film)) {
             throw new FailedValidationException(Messages.FAILED_FILM_VALIDATION);
-        } else if (filmStorage.getDatabase().containsValue(film)) {
-            throw new AlreadyExistsException(Messages.FILM_ALREADY_EXISTS);
         }
-        filmStorage.addFilm(film);
-        return film;
+        return filmService.addFilm(film);
     }
 
     @PutMapping
     public Film updateFilm(@RequestBody Film film) throws InvalidInputException {
         if (!Validator.isValidFilm(film)) {
             throw new FailedValidationException(Messages.FAILED_FILM_VALIDATION);
-        } else if (!filmStorage.getDatabase().containsKey(film.getId())) {
+        } else if (!filmService.filmIsPresent(film.getId())) {
             throw new NoSuchEntryException(Messages.NO_SUCH_FILM);
         }
-        filmStorage.modifyFilm(film);
-        return film;
+        return filmService.modifyFilm(film);
     }
 
     @PutMapping("{id}/like/{userId}")
     public void likeFilm(@PathVariable(value = "id") int filmID,
                          @PathVariable(value = "userId") int userID) {
-        filmService.checkFilmAndUserPresence(filmID, userID);
-        filmService.addLike(filmID, userID);
+        if (!filmService.filmIsPresent(filmID) & !userService.userIsPresent(userID)) {
+            throw new NoSuchEntryException(Messages.TRY_ANOTHER_ID);
+        } else {
+            filmService.addLike(filmID, userID);
+        }
     }
 
     @DeleteMapping("{id}/like/{userId}")
     public void unlikeFilm(@PathVariable(value = "id") int filmID,
                            @PathVariable(value = "userId") int userID) {
-        filmService.checkFilmAndUserPresence(filmID, userID);
-        filmService.removeLike(filmID, userID);
+
+        if (filmService.filmIsPresent(filmID) & userService.userIsPresent(userID)) {
+            filmService.removeLike(filmID, userID);
+        } else {
+            throw new NoSuchEntryException(Messages.TRY_ANOTHER_ID);
+        }
     }
 
     @GetMapping("/popular")
     public List<Film> getMostLikedFilms(@RequestParam(defaultValue = "10") int count) {
         return filmService.getMostPopularFilms(count);
     }
+
+
 }

@@ -1,36 +1,27 @@
 package ru.yandex.practicum.filmorate.model;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
+import org.springframework.lang.Nullable;
 
-import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
+import java.io.Serializable;
+import java.sql.Date;
+import java.util.List;
 
 @Getter
 @Setter
 @ToString
-@Builder
-public class Film {
+@Builder(access = AccessLevel.PUBLIC)
+@EqualsAndHashCode
+public class Film implements Serializable {
 
     private int id;
     private String name;
     private String description;
-    private LocalDate releaseDate;
+    private Date releaseDate;
     private int duration;
-    private final Set<User> usersThatLiked = new HashSet<>();
+    private MPA mpa;
+    private int rate;
+    @Nullable
+    private List<Genre> genres;
 
-    public void addLike(User user) {
-        usersThatLiked.add(user);
-    }
-
-    public void removeLike(User user) {
-        usersThatLiked.remove(user);
-    }
-
-    public int getLikesCount() {
-        return usersThatLiked.size();
-    }
 }
